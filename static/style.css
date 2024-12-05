@@ -5630,6 +5630,10 @@ html:has(.drawer-toggle:checked) {
   max-height: 100vh;
 }
 
+.max-h-full {
+  max-height: 100%;
+}
+
 .min-h-60 {
   min-height: 15rem;
 }
@@ -5933,6 +5937,10 @@ html:has(.drawer-toggle:checked) {
 
 .overflow-x-auto {
   overflow-x: auto;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
 }
 
 .truncate {

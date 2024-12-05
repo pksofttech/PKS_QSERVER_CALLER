@@ -325,7 +325,7 @@ async def router_monitor_kiosk_info(
     monitor_id: int = 1,
     db: AsyncSession = Depends(get_async_session),
 ):
-    LIMIT = 20
+    LIMIT = 15
     datas = {}
     _now = time_now()
     _sql = (

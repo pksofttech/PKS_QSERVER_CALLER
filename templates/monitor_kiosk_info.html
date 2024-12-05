@@ -5,10 +5,10 @@
     {% include '_meta.html' %}
 </head>
 
-<body class="flex flex-col bg-green-500 h-screen">
+<body class="flex flex-col bg-green-500 min-h-screen">
     <div class="grid grid-cols-2 gap-4 ">
         <!-- Left Panel -->
-        <div class="flex flex-col gap-2 rounded-md relative">
+        <div class="flex flex-col gap-2 rounded-md relative h-screen">
             <div class="bg-green-600 text-white text-6xl p-4 text-center rounded-md font-bold" id="clock_display">-</div>
             <div class="">
                 <div class="flex flex-col justify-end h-72">
@@ -30,11 +30,11 @@
             </div>
         </div>
         <!-- Right Panel -->
-        <div class="">
+        <div class="h-screen">
             <div class="bg-green-600 text-white text-6xl p-4 text-center rounded-md font-bold">
                 List Items
             </div>
-            <div class="p-4">
+            <div class="p-4 overflow-scroll" style="height: 90%;">
                 <!-- <table id="table_service" class="table text-xl table-zebra bg-green-400"> -->
                 <table id="table_service" class="table text-xl bg-green-400">
                     <tbody id="tbody_service" class=" font-extrabold text-center text-3xl text-white">

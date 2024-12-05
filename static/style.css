@@ -5439,6 +5439,10 @@ html:has(.drawer-toggle:checked) {
   bottom: 10rem;
 }
 
+.bottom-32 {
+  bottom: 8rem;
+}
+
 .z-10 {
   z-index: 10;
 }

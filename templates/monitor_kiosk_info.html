@@ -5,35 +5,27 @@
     {% include '_meta.html' %}
 </head>
 
-<body class="flex flex-col bg-green-500">
+<body class="flex flex-col bg-green-500 h-screen">
     <div class="grid grid-cols-2 gap-4 ">
         <!-- Left Panel -->
-        <div class="flex flex-col gap-2 bg-green-500 rounded-md ">
+        <div class="flex flex-col gap-2 rounded-md relative">
             <div class="bg-green-600 text-white text-6xl p-4 text-center rounded-md font-bold" id="clock_display">-</div>
-            <div class="" style="height: 60%;">
-                <div class="flex flex-col justify-end h-56">
-                    <div class="w-fit mx-auto animate-bounce  font-bold rounded-md bg-white p-8 ring-4 text-4xl" id="current_call" style="letter-spacing: 8px;">
+            <div class="">
+                <div class="flex flex-col justify-end h-72">
+                    <div class="w-fit mx-auto animate-bounce font-bold rounded-md bg-white p-8 ring-4 text-7xl" id="current_call" style="letter-spacing: 8px;">
                         no items.
                     </div>
-                    <div class="stat h-24">
-                        <div class="stat-figure text-secondary">
-                            <div class="avatar">
-                                <div class="w-16 rounded-full">
-                                    <img src="/static/image/grab_logo.jpg" />
-                                </div>
-                            </div>
+                    <div class="inline-flex p-8">
+                        <div class=" inline-flex gap-4 items-baseline">
+                            <div class="badge badge-neutral badge-lg">Time Call</div>
+                            <p id="current_call_time">-</p>
                         </div>
-                        <div class=" stat-value">
-                            <div class=" inline-flex gap-4 items-baseline">
-                                <div class="badge badge-neutral badge-lg">Time Call</div>
-                                <p id="current_call_time">-</p>
-                            </div>
-                        </div>
-                        <!-- <div class="stat-title">11/12/2024</div> -->
                     </div>
                 </div>
-                <div class="flex flex-row justify-center">
-                    <img class="h-60 rounded-full" src="/static/image/grab_logo.jpg" />
+            </div>
+            <div class="absolute bottom-40 left-0 w-full">
+                <div class="">
+                    <img class="h-60 rounded-full mx-auto ring-2 ring-white" src="/static/image/grab_logo.jpg" />
                 </div>
             </div>
         </div>
@@ -45,7 +37,7 @@
             <div class="p-4">
                 <!-- <table id="table_service" class="table text-xl table-zebra bg-green-400"> -->
                 <table id="table_service" class="table text-xl bg-green-400">
-                    <tbody id="tbody_service" class=" font-extrabold text-center text-white">
+                    <tbody id="tbody_service" class=" font-extrabold text-center text-3xl text-white">
                         {% for on_call in monitor_services %}
                         <tr class="">
                             <td class="text-left">

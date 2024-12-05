@@ -31,10 +31,10 @@ if __name__ == "__main__":
         host=HOST,
         port=PORT,
         timeout_keep_alive=30,
-        # reload_includes=["*.html"],
+        reload_includes=["*.html"],
         reload_dirs=[
             "./app",
-            # "./templates",
+            "./templates",
         ],
         reload=not PROD_MODE,
         # debug=True,

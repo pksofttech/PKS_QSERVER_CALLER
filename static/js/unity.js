@@ -773,7 +773,10 @@ export function wsService(_ws_event_subscription = null) {
             title: "ws_service",
             msg: "Socket is closed. Reconnect will be attempted in 10 second.",
         });
-        attemptReconnect();
+        // attemptReconnect();
+        setTimeout(function () {
+            location.reload();
+        }, 3000);
     };
 
     ws.onerror = function (err) {

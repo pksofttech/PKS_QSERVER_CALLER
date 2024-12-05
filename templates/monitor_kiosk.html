@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html data-theme="apptheme">
+
+<head>
+    {% include '_meta.html' %}
+
+    <style>
+        /* Center the loader */
+        #loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 1;
+            width: 120px;
+            height: 120px;
+            margin: -76px 0 0 -76px;
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="flex flex-col h-screen max-h-screen bg-scroll bg-center bg-no-repeat bg-auto" style="background-image: url('/static/image/logo.png')">
+    <div id="loader"></div>
+    <div class="w-full h-full p-4">
+        <div class="grid h-full grid-cols-2 gap-4">
+            <!-- Left Panel -->
+            <div class="flex flex-col h-full gap-2">
+                {% if system_services %}
+                <div class="pb-2 join">
+                    <select id="MONITOR_SELECT" onchange="select_monitor(this.value);" class="w-full max-w-xs text-lg select select-warning">
+                        <option disabled selected>เลือกแก้ไข monitor</option>
+                        <option value="1">monitor01</option>
+                        <option value="2">monitor02</option>
+                        <option value="3">monitor03</option>
+                        <option value="4">monitor04</option>
+                        <option value="5">monitor05</option>
+                    </select>
+                    <div class="px-8 text-2xl text-warning">MONITOR ID : {{monitor_id}}</div>
+                    <a href="/" class="btn btn-square btn-outline btn-primary">
+                        <i class="fa-solid fa-house"></i>
+                    </a>
+                </div>
+                <div class="flex flex-row gap-4">
+                    <div class="w-48 alert">
+                        <span>Set Language</span>
+                    </div>
+                    <select id="MONITOR_LANGUAGE" onchange="select_language(this.value);" class="p-2 select select-info">
+                        <option disabled selected>Language</option>
+                        <option>Thai</option>
+                        <option>English</option>
+                        <option>Chinese</option>
+                        <option>Burmese</option>
+                        <option>Japanese</option>
+                    </select>
+                </div>
+
+
+                <button class="mb-2 btn btn-outline btn-warning" onclick="edit_monitor_apply()">นำไปใช้งาน (reload monitor)</button>
+                {% endif %}
+
+                <!-- <div class="alert alert-info">
+                    <div class="avatar">
+                        <div class="w-8 rounded-full">
+                            <img src="/static/image/logo.png" />
+                        </div>
+                    </div>
+                    {% if system_services %}
+                    <span>
+                        <button class="btn btn-sm btn-circle btn-outline " onclick="modal_config_info_title.showModal()">
+                            <i class="text-warning fa-solid fa-gear"></i>
+                        </button>
+                    </span>
+                    {% endif %}
+                    <h1 class="w-full text-2xl text-right text-primary-content">
+                        {% if monitor_info["infotitle"] %}
+                        {{monitor_info["infotitle"]}}
+                        {% else %}
+                        Q PKS ยินดีต้อนรับ
+                        {% endif %}
+                    </h1>
+                </div> -->
+
+                <div class="">
+
+                    {% if video_path %}
+
+                    <video class="rounded-2xl" width="100%" muted autoplay loop>
+                        <source src="{{video_path}}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+
+                    {% endif %}
+                    {% if iframe_path %}
+                    <!-- <iframe class="rounded-xl" width="100%" height="400" src="{{iframe_path}}"
+                        title="Thailand 4K Video - Beautiful Nature Scenery with Relaxing Music | 4K VIDEO ULTRA HD" frameborder="0"
+                        allow="accelerometer; autoplay; muted; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" autoplay muted>
+                    </iframe> -->
+                    {% endif %}
+                    {% if system_services %}
+                    <span>
+                        <button class="btn btn-sm btn-circle btn-outline " onclick="modal_config_video.showModal()">
+                            <i class="text-warning fa-solid fa-gear"></i>
+                        </button>
+                    </span>
+                    {% endif %}
+
+                </div>
+
+                <div class=" glass rounded-xl grow">
+                    <table id="table_service_dashboard" class="table table-xs xl:table-lg">
+                        <!-- <caption class="p-2 caption-top">
+                            QPKS By pksofttech.org
+                        </caption> -->
+                        <tbody id="tbody_service_dashboard" class="font-extrabold text-red-700 ">
+                            {% for l in service_counts %}
+                            <tr class="">
+                                <td class="hidden ">
+                                    {{l[1]}}
+                                </td>
+                                <td class="">
+                                    {{l[2]}}
+                                </td>
+                                <td class="">
+                                    รอรับบริการ {{l[3]}} ราย
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                        <template id="template_content_service_dashboard">
+                            <tr class="">
+                                <td name="col01" class="">
+                                    001
+                                </td>
+                                <td name="col02" class="">
+                                    002
+                                </td>
+                            </tr>
+                        </template>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+
+            <!-- Right Panel -->
+            <div class=" glass rounded-2xl">
+                {% if system_services %}
+                <button class="btn btn-sm btn-circle btn-outline " onclick="modal_config_info_table.showModal()">
+                    <i class="text-warning fa-solid fa-gear"></i>
+                </button>
+                {% endif %}
+                <table id="table_service" class="table text-2xl table-zebra">
+                    <marquee class="px-8 overflow-hidden text-md max-w-max text-info">
+                        QPKS By pksofttech.org................................. QPKS By pksofttech.org.................................. QPKS By pksofttech.org
+                    </marquee>
+                    <thead class="text-5xl text-center text-red-900 bg-blue-500 opacity-75">
+                        <tr class="h-20">
+                            <th>{{number_text}}</th>
+                            <th>{{counter_text}}</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody_service" class="text-6xl font-extrabold text-center text-orange-700">
+                        {% for on_call in monitor_services %}
+                        <tr class="h-20 ">
+                            <td class="">
+                                {{on_call.Service.group}}{{on_call.Transaction.number}}
+                            </td>
+                            <td class="">
+                                {{on_call.Transaction.caller_device}}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <template id="template_content_service">
+                        <tr class="h-20 ">
+                            <td name="col01" class="">
+                                001
+                            </td>
+                            <td name="col02" class="">
+                                002
+                            </td>
+                        </tr>
+                    </template>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="fixed inset-x-0 bottom-0 flex items-center px-2 shadow-lg rounded-t-xl bg-info footer opacity-90">
+        <div class="z-10 w-32 bg-info ">
+            <div class="avatar">
+                <div class="w-20 rounded-full">
+                    <img src="/static/image/logo.png" />
+                </div>
+            </div>
+        </div>
+        {% if system_services %}
+        <button class="btn btn-sm btn-circle btn-outline " onclick="modal_config_info_msg.showModal()">
+            <i class="text-warning fa-solid fa-gear"></i>
+        </button>
+        {% endif %}
+        <div class="flex flex-col">
+            <marquee direction="left" scrolldelay="150" class="p-2 text-2xl text-success ">
+                <span>
+                    {% if monitor_info["info01"] %}
+                    {{monitor_info["info01"]}}
+                    {% else %}
+                    ข่าวประชาสัมพันธ์
+                    {% endif %}
+                </span>
+
+            </marquee>
+            <marquee class="p-1 overflow-hidden text-xl max-w-max">
+                <span>
+                    {% if monitor_info["info02"] %}
+                    {{monitor_info["info02"]}}
+                    ระบบเรียกบริการคือระบบที่ใช้ในการจัดการและควบคุมการเรียกให้บริการหรือการรอคอยของลูกค้าหรือผู้ใช้บริการในสถานที่ต่าง ๆ เช่น โรงพยาบาล ห้างสรรพสินค้า ร้านอาหาร
+                    เป็นต้น เป้าหมายหลักของระบบเรียกบริการคือการลดระยะเวลารอคอยและเพิ่มประสิทธิภาพในการให้บริการแก่ลูกค้าหรือผู้ใช้งานโดยทั่วไป
+                    {% endif %}
+                </span>
+            </marquee>
+
+        </div>
+
+    </div>
+
+    <footer class="fixed inset-x-0 bottom-0 items-center rounded-lg footer">
+        <p class="pl-2 text-xs">Copyright © 2021 - All right reserved</p>
+    </footer>
+
+
+    <dialog id="modal_config_info_table" class="modal">
+        <form method="dialog" class="modal-box">
+            <h3 class="text-lg font-bold">Edit table service</h3>
+            <div class="flex flex-col gap-2">
+                <label class="">Number</label>
+                <input id="NUMBER_TEXT_DISPLAY" value="{{number_text}}" class="w-full input input-bordered input-primary" placeholder="Number"></input>
+                <label class="">Counter</label>
+                <input id="COUNTER_TEXT_DISPLAY" value="{{counter_text}}" class="w-full input input-bordered input-primary" placeholder="Counter"></input>
+            </div>
+
+            <div class="modal-action">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn btn-primary" onclick="update_table_monitor()">Success</button>
+                <button class="btn btn-accent">Close</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="modal_config_info_msg" class="modal">
+        <form method="dialog" class="modal-box">
+            <h3 class="text-lg font-bold">Edit Information</h3>
+            <div class="flex flex-col gap-2">
+                <label class="">Info Header</label>
+                <textarea id="INFO_HEADER" class="textarea textarea-primary" placeholder=""></textarea>
+                <label class="">Info Message</label>
+                <textarea rows="6" id="INFO_MESSAGE" class="textarea textarea-primary" placeholder=""></textarea>
+            </div>
+
+            <div class="modal-action">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn btn-primary" onclick="update_info_monitor()">Success</button>
+                <button class="btn btn-accent">Close</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="modal_config_info_title" class="modal">
+        <form method="dialog" class="modal-box">
+            <h3 class="text-lg font-bold">Edit Title Information</h3>
+            <div class="flex flex-col gap-2">
+                <label class="">Info Title</label>
+                <textarea id="INFO_TITLE" class="textarea textarea-primary" placeholder=""></textarea>
+            </div>
+
+            <div class="modal-action">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn btn-primary" onclick="update_info_monitor()">Success</button>
+                <button class="btn btn-accent">Close</button>
+            </div>
+        </form>
+    </dialog>
+
+
+    <dialog id="modal_config_video" class="modal">
+        <form method="dialog" class="modal-box">
+            <h3 class="text-lg font-bold">Edit Video Information</h3>
+            <div class="flex flex-col gap-2">
+                <label class="">Up load video</label>
+                <input id="INFO_VIDEO_UPLOAD" type="file" accept=".mp4" class="w-full max-w-xs file-input file-input-bordered file-input-primary" />
+            </div>
+
+            <div class="modal-action">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn btn-primary" onclick="update_info_monitor_video()">Success</button>
+                <button class="btn btn-accent">Close</button>
+            </div>
+        </form>
+    </dialog>
+
+
+
+
+</body>
+{% include '_script.html' %}
+
+<script>
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-center",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "10000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+
+<script type="text/javascript">
+    const qpks_start = new Howl({
+        src: ['{{sounds_path}}qpks_start.mp3']
+    });
+
+    let ON_Play = false;
+    const QUEUE_WORLD = []
+    const QUEUE_SOUNDS = []
+    const QPKS_SOUNDS = {};
+
+
+    //qpks_start.play();
+    toastr["info"]("ยินดีต้อนรับระบบ Q PSK ขอบคุณที่ใช้บริการค่ะ");
+
+    //qpks_start.play();
+    //sound_get_card.play();
+
+    function play_QUEUE_SOUNDS() {
+        const sound = QUEUE_SOUNDS.shift();
+        if (sound !== undefined) {
+            ON_Play = true;
+            try {
+                QPKS_SOUNDS[sound].play();
+            } catch (error) {
+                console.error(error);
+                QPKS_SOUNDS["infobleep"].play();
+            }
+
+
+        } else {
+            ON_Play = false;
+        }
+    }
+
+    async function init_sounds_modules() {
+        const sound_list = "0123456789ABCDEFGHI"
+        for (let i in sound_list) {
+            const char_sound = sound_list[i];
+            QPKS_SOUNDS[char_sound] = new Howl({
+                src: [`{{sounds_path}}${char_sound}.mp3`],
+                onend: play_QUEUE_SOUNDS,
+            });
+        }
+        QPKS_SOUNDS["call_number"] = new Howl({
+            src: [`{{sounds_path}}call_number.mp3`],
+            onend: play_QUEUE_SOUNDS,
+        });
+        QPKS_SOUNDS["at_counter"] = new Howl({
+            src: ["{{sounds_path}}at_counter.mp3"],
+            onend: play_QUEUE_SOUNDS,
+        });
+
+        QPKS_SOUNDS["infobleep"] = new Howl({
+            src: ["{{sounds_path}}infobleep.mp3"],
+            onend: play_QUEUE_SOUNDS,
+        });
+
+
+        QPKS_SOUNDS["end"] = new Howl({
+            src: ["{{sounds_path}}end.mp3"],
+            onend: function () {
+                play_QUEUE_SOUNDS();
+                debug("End of Sound ")
+                const world_play = QUEUE_WORLD.shift();
+                if (world_play === undefined) {
+                    debug("End of Sound QUEUE_WORLD");
+                    QPKS_SOUNDS["thank"].play();
+                }
+                call_active_table_service(world_play);
+            },
+        });
+
+        QPKS_SOUNDS["thank"] = new Howl({
+            src: ["{{sounds_path}}thank.mp3"],
+            //onend: play_QUEUE_SOUNDS,
+        });
+    }
+    init_sounds_modules();
+    function add_str_sound(sequence_sound) {
+        if (typeof add_str_sound.lock == 'undefined') {
+            add_str_sound.lock = false;
+        }
+        while (add_str_sound.lock);
+        add_str_sound.lock = true;
+        for (let i = 0; i <= sequence_sound.length - 1; i++) {
+            QUEUE_SOUNDS.push(sequence_sound[i]);
+        }
+        add_str_sound.lock = false;
+    }
+
+    async function push_QUEUE_WORLD(mode, msg1, msg2) {
+        if (QUEUE_WORLD.includes(msg1)) {
+            debug(msg1 + " already in queue for playback");
+            return
+        }
+        QUEUE_WORLD.push(msg1);
+
+        //debug(QUEUE_WORLD);
+        const numbers = msg1.split("");
+        let world_players = [];
+        world_players.push("call_number");
+        world_players = world_players.concat(numbers);
+        world_players.push("at_counter");
+        world_players.push(msg2);
+        world_players.push("end");
+
+        add_str_sound(world_players);
+        if (!ON_Play) {
+            QUEUE_WORLD.shift();
+            ON_Play = true;
+            QPKS_SOUNDS["infobleep"].play();
+            call_active_table_service(msg1);
+
+        }
+    }
+
+
+    //add_str_sound(["call_number", "A", "0", "0", "1", "at_counter", "1", "end"]);
+    //add_str_sound(["call_number", "B", "0", "0", "2", "at_counter", "2", "end"]);
+
+
+
+</script>
+
+<script>
+    function show_info(msg, title, icon) {
+        Swal.fire({
+            toast: true,
+            position: 'top-start',
+            icon: icon,
+            title: title,
+            html: msg,
+            timer: 5000,
+            showConfirmButton: false,
+        });
+
+    }
+
+    const TABLE_ROW = 10;
+    async function insert_feed_table_service(col01, col02) {
+        const _table = document.getElementById("table_service");
+        const _tbody = document.getElementById("tbody_service");
+        const temp = document.getElementById("template_content_service");
+        if (_table.rows.length > TABLE_ROW) {
+            _table.deleteRow(-1);
+        }
+        const _c = temp.content.cloneNode(true);
+        _c.querySelectorAll('[name="col01"]')[0].innerText = col01;
+        _c.querySelectorAll('[name="col02"]')[0].innerText = col02;
+
+        _tbody.insertBefore(_c, _tbody.firstChild);
+    }
+
+    function update_table_service(col01, col02, feed_msg) {
+        const _table = document.getElementById("table_service");
+        const _tbody = document.getElementById("tbody_service");
+        for (let i = 0, row; row = _tbody.rows[i]; i++) {
+            r = row.getElementsByTagName("td");
+            if (r[0].innerText == col01) {
+                r[1].innerHTML = feed_msg;
+            }
+        }
+    }
+
+    async function call_active_table_service(col01) {
+        const _table = document.getElementById("table_service");
+        const _tbody = document.getElementById("tbody_service");
+        for (let i = 0, row; row = _tbody.rows[i]; i++) {
+            r = row.getElementsByTagName("td");
+            if (r[0].innerText == col01) {
+                const feed_msg = `<div class="p-4 text-3xl badge badge-success animate-ping">
+                    ${r[1].innerText}
+                  </div>`;
+                r[1].innerHTML = feed_msg;
+            } else {
+                r[1].innerText = r[1].innerText;
+            }
+        }
+    }
+
+    async function del_feed_table_service(col01, col02) {
+        const _table = document.getElementById("table_service");
+        const _tbody = document.getElementById("tbody_service");
+        const rows_del = [];
+        for (let i = 0, row; row = _tbody.rows[i]; i++) {
+            r = row.getElementsByTagName("td");
+            if (r[0].innerText == col01) {
+                rows_del.push(i);
+            }
+        }
+        debug(rows_del);
+        for (const row_index of rows_del) {
+            _tbody.deleteRow(row_index);
+        }
+    }
+
+    async function update_info_service_counts() {
+        const _table = document.getElementById("table_service_dashboard");
+        const _tbody = document.getElementById("tbody_service_dashboard");
+        const temp = document.getElementById("template_content_service_dashboard");
+
+        _tbody.innerHTML = "";
+        const _reply = await fetchApi(`/api/service/service_status/?service_id=0`, "get", null, "json");
+        if (!!_reply) {
+            if (_reply.success == true) {
+                debug(_reply.data);
+
+                for (const e of _reply.data) {
+                    if (e.count == 0) {
+                        continue;
+                    }
+                    const _c = temp.content.cloneNode(true);
+                    _c.querySelector('[name="col01"]').innerHTML = e.name;
+                    _c.querySelector('[name="col02"]').innerHTML = "รอรับบริการ " + e.count + " ราย";
+                    _tbody.appendChild(_c);
+                }
+
+            } else {
+                toastMixin.fire({
+                    title: JSON.stringify(_reply),
+                    icon: "error",
+                });
+            }
+        }
+    }
+
+    function web_socket_event(params) {
+        const monitor_kiosk = params.monitor_kiosk;
+        if (monitor_kiosk) {
+
+            if (monitor_kiosk.reload) {
+                toastr["warning"](`Q PSK RELOAD`);
+                setTimeout(() => { window.location.reload(); }, 1000);
+                return;
+            }
+
+            const col01 = `${monitor_kiosk.group}${monitor_kiosk.number}`;
+            const col02 = `${monitor_kiosk.caller_device}`;
+
+            if (monitor_kiosk.status == 202) {
+                insert_feed_table_service(col01, col02);
+                const msg = `<div class="p-4 text-3xl badge badge-info">${col01}</div> <div class="p-4 text-3xl badge badge-info">${col02}</div>`;
+                show_info(msg, "CAll-หมายเลข", "warning");
+                push_QUEUE_WORLD(202, col01, col02);
+                update_info_service_counts();
+
+
+            } else if (monitor_kiosk.status == 301) {
+                push_QUEUE_WORLD(301, col01, col02);
+                toastr["warning"]("Recall-หมายเลข " + col01 + " ที่ช่องบริการ " + col02);
+
+
+
+            } else if (monitor_kiosk.status == 300) {
+
+                const msg = `<div class="p-4 text-3xl badge badge-success">${col01}</div><div class="p-4 text-3xl badge badge-info">${col02}</div>`;
+                show_info(msg, "Success-หมายเลข", "warning");
+                toastr["success"]("หมายเลข " + col01 + " ที่ช่องบริการ " + col02 + " ดำเนินการเรียบร้อยแล้ว");
+                const feed_msg = `< div class="p-4 text-3xl badge badge-success" >${col02} ดำเนินการเรียบร้อยแล้ว</> `;
+                del_feed_table_service(col01, col02);
+
+            }
+
+        }
+        if (params.caller_kiosk) {
+            update_info_service_counts();
+        }
+
+    }
+    ws_event_subscription = web_socket_event
+
+</script>
+
+{% if system_services %}
+<script>
+    document.getElementById("MONITOR_SELECT").value = "{{MONITOR_SELECT}}";
+    document.getElementById("MONITOR_LANGUAGE").value = "{{MONITOR_LANGUAGE}}";
+    //document.getElementById("MONITOR_LANGUAGE_DISPLAY").value = "{{MONITOR_LANGUAGE_DISPLAY}}";
+    function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    const MONITOR_ID = "{{monitor_id}}";
+    debug("MONITOR_ID : " + MONITOR_ID);
+
+    toastr["warning"](`Q PSK MODE EDITING`);
+    const INFO_TITLE = document.getElementById("INFO_TITLE");
+    INFO_TITLE.value = '{{monitor_info["infotitle"]}}';
+    if (INFO_TITLE.value == "") { INFO_TITLE.value = "Q PKS ยินดีต้อนรับ"; }
+    const INFO_HEADER = document.getElementById("INFO_HEADER");
+    INFO_HEADER.value = '{{monitor_info["info01"]}}';
+    const INFO_MESSAGE = document.getElementById("INFO_MESSAGE");
+    INFO_MESSAGE.value = '{{monitor_info["info02"]}}';
+
+    const NUMBER_TEXT_DISPLAY = document.getElementById("NUMBER_TEXT_DISPLAY");
+    NUMBER_TEXT_DISPLAY.value = '{{number_text}}';
+
+    const COUNTER_TEXT_DISPLAY = document.getElementById("COUNTER_TEXT_DISPLAY");
+    COUNTER_TEXT_DISPLAY.value = '{{counter_text}}';
+
+
+
+    const INFO_VIDEO_UPLOAD = document.getElementById("INFO_VIDEO_UPLOAD");
+
+    async function update_info_monitor() {
+        const formData = new FormData();
+        formData.append("monitor_id", MONITOR_ID);
+        formData.append("infotitle", INFO_TITLE.value);
+        formData.append("info01", INFO_HEADER.value);
+        formData.append("info02", INFO_MESSAGE.value);
+
+        debug_form(formData);
+        const _reply = await fetchApi(`/api/app_config/app_config_monitor/`, "post", formData, "json");
+        if (!!_reply) {
+            if (_reply.success == true) {
+                const transaction = _reply.data;
+                toastr["success"](`${_reply.data} `);
+
+            } else {
+                toastMixin.fire({
+                    title: JSON.stringify(_reply),
+                    icon: "error",
+                });
+            }
+        }
+    }
+
+    async function update_table_monitor() {
+        const formData = new FormData();
+        formData.append("monitor_id", MONITOR_ID);
+        formData.append("number_text", NUMBER_TEXT_DISPLAY.value);
+        formData.append("counter_text", COUNTER_TEXT_DISPLAY.value);
+
+        debug_form(formData);
+        const _reply = await fetchApi(`/api/app_config/app_config_monitor/`, "post", formData, "json");
+        if (!!_reply) {
+            if (_reply.success == true) {
+                const transaction = _reply.data;
+                toastr["success"](`${_reply.data} `);
+
+            } else {
+                toastMixin.fire({
+                    title: JSON.stringify(_reply),
+                    icon: "error",
+                });
+            }
+        }
+    }
+
+    async function update_info_monitor_video() {
+        if (INFO_VIDEO_UPLOAD.files[0]) {
+            const maxAllowedSize = 50 * 1024 * 1024;
+            if (INFO_VIDEO_UPLOAD.files[0].size > maxAllowedSize) {
+                Swal.fire(
+                    'ข้อผิดพลาด?',
+                    'File มีขนาดใหญ่ไม่สามารถ ดำเนินการได้',
+                    'error'
+                );
+                return;
+            }
+            if (!(await dialog_confirm({ text: "การ upload video จะแทนที่ video เดิม !" }))) return;
+            document.getElementById("loader").style.display = "block";
+            const formData = new FormData();
+            formData.append("monitor_id", MONITOR_ID);
+            formData.append("info_video", INFO_VIDEO_UPLOAD.files[0], "info_video.mp4");
+            const _reply = await fetchApi(`/api/app_config/app_config_monitor_video/`, "post", formData, "json");
+            document.getElementById("loader").style.display = "none";
+            if (!!_reply) {
+                if (_reply.success == true) {
+                    const transaction = _reply.data;
+                    toastr["success"](`${_reply.data} `);
+                    window.location.reload();
+
+                } else {
+                    toastMixin.fire({
+                        title: JSON.stringify(_reply),
+                        icon: "error",
+                    });
+                }
+            }
+        }
+
+    }
+
+    async function select_monitor(monitor_id) {
+        window.location.href = `/monitor_kiosk?system_config=1&monitor_id=${monitor_id} `;
+    }
+
+    async function select_language(language) {
+        const formData = new FormData();
+        formData.append("monitor_id", MONITOR_ID);
+        formData.append("language", language);
+        debug_form(formData);
+        const _reply = await fetchApi(`/api/app_config/app_config_monitor/`, "post", formData, "json");
+        if (!!_reply) {
+            if (_reply.success == true) {
+                const transaction = _reply.data;
+                toastr["success"](`${_reply.data} `);
+
+            } else {
+                toastMixin.fire({
+                    title: JSON.stringify(_reply),
+                    icon: "error",
+                });
+            }
+        }
+    }
+
+    async function select_language_display(language) {
+        const formData = new FormData();
+        formData.append("monitor_id", MONITOR_ID);
+        formData.append("language_display", language);
+        debug_form(formData);
+        const _reply = await fetchApi(`/api/app_config/app_config_monitor/`, "post", formData, "json");
+        if (!!_reply) {
+            if (_reply.success == true) {
+                const transaction = _reply.data;
+                toastr["success"](`${_reply.data} `);
+
+            } else {
+                toastMixin.fire({
+                    title: JSON.stringify(_reply),
+                    icon: "error",
+                });
+            }
+        }
+    }
+
+    async function edit_monitor_apply() {
+        const _reply = await fetchApi(`/api/app_config/app_config_monitor_reload/`, "post", null, "json");
+        if (!!_reply) {
+            if (_reply.success == true) {
+                toastr["success"](`${_reply.data}`);
+
+            } else {
+                toastMixin.fire({
+                    title: JSON.stringify(_reply),
+                    icon: "error",
+                });
+            }
+        }
+    }
+
+</script>
+{% endif %}
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        document.getElementById("loader").style.display = "none";
+        qpks_start.play();
+    });
+</script>
+
+</html>

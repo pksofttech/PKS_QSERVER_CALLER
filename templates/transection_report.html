@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	{% include '_meta.html' %}
+</head>
+
+<body class=" dark:bg-base-100">
+	<!-- MAIN BODY -->
+	<div class=" drawer lg:drawer-open">
+		<input id="side-drawer" type="checkbox" class="drawer-toggle" />
+		<div class="relative flex flex-col px-2 drawer-content">
+			{% include '_nav_bar.html' %}
+			<div class="content_box">
+				<div role="tablist" class=" tabs tabs-lifted">
+					<input type="radio" name="tab_control" role="tab" class="tab text-nowrap" aria-label="🏷️ สรุปรายการรับบริการ(การบริการที่ยังดำเนิกการอยู่)" checked
+						onclick="tab_transection_report_select(1)" />
+					<div role=" tabpanel" class="tab-content tab-content-custom">
+						<div class="text-gray-500 shadow-md ">
+							<table id="transection_report_table" style="width:100%" class="table text-gray-500 dark:text-gray-400 display compact">
+								<tfoot>
+									<tr>
+
+									</tr>
+								</tfoot>
+							</table>
+
+						</div>
+					</div>
+
+					<input type="radio" name="tab_control" role="tab" class="tab text-nowrap" aria-label="🏷️ รายการรับบริการ(การรับบริการ)"
+						onclick="tab_transection_report_select(2)" />
+					<div role=" tabpanel" class="tab-content tab-content-custom">
+						<div class="px-8">
+							<input type="text"
+								class="w-full p-2 text-lg font-medium text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-green-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+								id="select_date_time_range_of_build_transection_report" placeholder="YYYY/MM/DD HH:MM - YYYY/MM/DD HH:MM" value=""
+								onchange="on_chang_datetime(this.value)">
+						</div>
+						<div class="text-gray-500 shadow-md sm:rounded-lg">
+
+							<table id="transection_record_report_table" style="width:100%" class="table text-gray-500 display dark:text-gray-400">
+								<tfoot>
+
+								</tfoot>
+							</table>
+
+						</div>
+					</div>
+
+					<input type="radio" name="tab_control" role="tab" class="tab text-nowrap" aria-label="🏷️ กราฟรายงาน(การรับบริการ)"
+						onclick="tab_transection_report_select(3)" />
+					<div role=" tabpanel" class="tab-content tab-content-custom">
+						<div class="flex flex-row gap-4 px-8">
+							<div>
+								<select id="chart_type_select" onchange="build_transection_table();" class="px-8 select select-primary">
+									<option value="services">By Services</option>
+									<option value="counters">By Counter</option>
+									<!-- <option>By Success</option> -->
+								</select>
+							</div>
+
+							<input type="text"
+								class="w-full p-2 text-lg font-medium text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-green-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+								id="select_date_time_range_of_build_transection_chart" placeholder="YYYY/MM/DD HH:MM - YYYY/MM/DD HH:MM" value=""
+								onchange="on_chang_datetime_chart(this.value)">
+
+						</div>
+						<div class="text-gray-500 shadow-md sm:rounded-lg">
+							<canvas id="chart_div"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% include '_side_menu_bar.html' %}
+	</div>
+
+	{% include '_footer.html' %}
+	{% include '_dialog.html' %}
+</body>
+{% include '_script.html' %}
+
+<script type="text/javascript" src="/static/plugins/chart.js/Chart.min.js"></script>
+<script type="module" src="/static/js/transection_report.js?t={{now}}"></script>
+
+</html>

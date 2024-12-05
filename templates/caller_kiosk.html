@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html data-theme="apptheme">
+
+<head>
+    {% include '_meta.html' %}
+</head>
+
+<body class="flex flex-col h-screen bg-scroll bg-center bg-no-repeat bg-auto " style="background-image: url('/static/image/system.png')">
+    <div class="w-full h-full p-4">
+        <div class="alert alert-info">
+            <p>Caller (เครื่องเรียกรับบริการ) <button onclick="setting_counter_service()" class="btn btn-xs btn-circle text-error"><i class="fa-solid fa-gear"></i></button></p>
+            <i class="p-2 fa-solid fa-volume-high fa-2xl"> ช่องบริการ {{caller_id}}</i>
+
+        </div>
+
+        <div class="w-full mt-2 card glass">
+            <div class="card-body">
+                <div class="flex justify-around">
+                    <div class="w-full">
+                        <h1 id="SERVICE_GROUP_LABLE" class="text-7xl card-title text-success-content">-</h1>
+                        <p>รายการรับบริการล่าสุด <span class="badge badge-secondary " id="LAST_TRANSACTION_LABEL">-</span></p>
+                        <p>จำนวนคนรอรับบริการ <span class="badge badge-error " id="SERVICE_WAIT_COUNT_LABEL">-</span></p>
+                        <p>จำนวนคนรอรับบริการทุกกลุ่ม <span class="badge badge-warning " id="SERVICE_WAIT_COUNT_ALL_LABEL">-</span></p>
+                        <button onclick="view_all_service()" id="CALL_SERVICE_ALL_INFO_BTN" class="btn btn-outline btn-sm">ดูรายละเอียด</button>
+
+                    </div>
+                    <div class="w-full">
+                        <select id="SERVICE_SELECT_INPUT" class="w-full text-lg select text-warning-content bg-warning" onchange="select_service(this.value);">
+                            <option class="text-warning" disabled selected>เลือกรับบริการ</option>
+                            {% for l in sevices %}
+                            <option value={{l[0]}}>{{l[1]}} ({{l[2]}})</option>
+                            {% endfor %}
+                        </select>
+                        <button onclick="call_service_transaction()" id="CALL_SERVICE_TRANSACTION_BTN" disabled
+                            class="w-full mt-4 btn btn-outline btn-warning btn-lg">เรียกรับบริการ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full mt-2 bg-blue-500 bg-opacity-80 card">
+            <div class="text-orange-900 card-body">
+
+                <div>
+                    <div class="badge badge-accent badge-lg">เครื่องพิมพ์ </div> <span class="text-lg font-extrabold" id="TRANSACTION_MACHINE_PRINTER_LABEL">-</span>
+                </div>
+                <div>
+                    <div class="badge badge-accent badge-lg">เวลาออกรายการ </div> <span class="text-lg font-extrabold" id="TRANSACTION_CREATE_DATE_LABEL">-</span>
+                </div>
+
+                <div id="TRANSACTION_SLIP_NUMBER_LABEL" class="p-2 font-black text-center border-4 rounded-lg text-7xl border-success text-warning">----</div>
+
+
+                <button id="TRANSACTION_CANCEL_BTN" onclick="TRANSACTION_OBJ.set_cancle()" type="button" disabled class=" btn btn-error btn-lg">ยกเลิกรายการ</button>
+                <button id="TRANSACTION_RECALL_BTN" onclick="TRANSACTION_OBJ.re_call()" type="button" disabled class=" btn btn-warning btn-lg">เรียกรับบริการอีกครั้ง</button>
+
+                <button id="TRANSACTION_SUCCESS_BTN" onclick="TRANSACTION_OBJ.success()" type="button" disabled class="text-lg btn btn-success btn-lg">รับบริการสำเร็จ</button>
+            </div>
+        </div>
+
+    </div>
+    <footer class="fixed inset-x-0 bottom-0 items-center p-4 rounded-lg footer">
+        <div class="flex justify-between w-full">
+            <div class="flex">
+                <p>Copyright © 2021 - All right reserved</p>
+            </div>
+            <div class="">
+                <a>
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                </a>
+            </div>
+        </div>
+
+    </footer>
+
+    <dialog id="modal_service_all_info" class="modal">
+        <form method="dialog" class="modal-box">
+            <h3 class="text-lg font-bold">รายการรอรับบริการล่าสุด</h3>
+            <div id="modal_service_all_info_content" class="flex flex-col gap-2">
+
+            </div>
+
+            <div class="modal-action">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn">Close</button>
+            </div>
+        </form>
+    </dialog>
+
+    <template id="template_content_service_info">
+        <div class="rounded-lg shadow-md stat bg-primary">
+            <div class="flex items-center">
+                <div name="service_group" class="inline-flex items-center justify-center w-10 h-10 text-2xl font-bold rounded-full bg-accent ring ring-orange-500">
+                    5
+                </div>
+                <div name="service_name" class="px-4"></div>
+            </div>
+
+            <div name="service_wait_count" class=" badge badge-secondary badge-lg"></div>
+            <div class="stat-actions">
+                <button name="service_select_btn" value="1" onclick="select_service_by_btn(this.value);" class="btn btn-sm">เลือกรับบริการ</button>
+            </div>
+            <!-- <div class="stat-desc">21% more than last month</div> -->
+        </div>
+    </template>
+
+</body>
+{% include '_script.html' %}
+
+<script>
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-top-left",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "3000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+<script>
+    async function sendtoserial(data) {
+        const json_obj = {
+            cmd: "sendtoserial",
+            data: `${data}\r\n`,
+        };
+        const json_msg = JSON.stringify(json_obj);
+        try {
+            android_webview.postMessage(json_msg);
+        } catch (e) {
+            debug(e);
+        }
+
+    }
+    const SERVICE_GROUP_LABLE = document.getElementById("SERVICE_GROUP_LABLE");
+    const LAST_TRANSACTION_LABEL = document.getElementById("LAST_TRANSACTION_LABEL");
+    const SERVICE_WAIT_COUNT_LABEL = document.getElementById("SERVICE_WAIT_COUNT_LABEL");
+    const SERVICE_WAIT_COUNT_ALL_LABEL = document.getElementById("SERVICE_WAIT_COUNT_ALL_LABEL");
+    const CALL_SERVICE_ALL_INFO_BTN = document.getElementById("CALL_SERVICE_ALL_INFO_BTN");
+
+    const TRANSACTION_MACHINE_PRINTER_LABEL = document.getElementById("TRANSACTION_MACHINE_PRINTER_LABEL");
+    const TRANSACTION_CREATE_DATE_LABEL = document.getElementById("TRANSACTION_CREATE_DATE_LABEL");
+    const TRANSACTION_SLIP_NUMBER_LABEL = document.getElementById("TRANSACTION_SLIP_NUMBER_LABEL");
+
+    const CALL_SERVICE_TRANSACTION_BTN = document.getElementById("CALL_SERVICE_TRANSACTION_BTN")
+    const TRANSACTION_CANCEL_BTN = document.getElementById("TRANSACTION_CANCEL_BTN")
+    const TRANSACTION_RECALL_BTN = document.getElementById("TRANSACTION_RECALL_BTN")
+    const TRANSACTION_SUCCESS_BTN = document.getElementById("TRANSACTION_SUCCESS_BTN")
+    const SERVICE_SELECT_INPUT = document.getElementById("SERVICE_SELECT_INPUT")
+    let SERVICE_ID = -1;
+    let COUNTER_NO = 1;
+
+    function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    COUNTER_NO = getParameterByName('caller_id');
+
+    const DEVICE_CALLER = "{{caller_id}}";
+    const TRANSACTION_OBJ = {
+        id: 0,
+        group: "",
+        number: "",
+        call_time: null,
+        status: 1,
+        async success(msg) {
+            if (this.id > 0) {
+                const _reply = await fetchApi(`/api/transaction/update/?transaction_id=${this.id}&status_code=300&caller_device=${DEVICE_CALLER}`, "post", null, "json");
+                if (!!_reply) {
+                    if (_reply.success == true) {
+                        const transaction = _reply.data;
+                        setBtn_Transition_Control_Active(false);
+                        select_service(SERVICE_ID);
+                        TRANSACTION_MACHINE_PRINTER_LABEL.innerHTML = "";
+                        TRANSACTION_CREATE_DATE_LABEL.innerHTML = "";
+                        TRANSACTION_SLIP_NUMBER_LABEL.innerHTML = "----";
+
+                        sendtoserial("   QPKS");
+
+                    } else {
+                        toastMixin.fire({
+                            title: JSON.stringify(_reply),
+                            icon: "error",
+                        });
+                    }
+                }
+            }
+
+        },
+        async re_call(msg) {
+            if (this.id > 0) {
+                const _reply = await fetchApi(`/api/transaction/update/?transaction_id=${this.id}&status_code=301&caller_device=${DEVICE_CALLER}`, "post", null, "json");
+                if (!!_reply) {
+                    if (_reply.success == true) {
+                        const transaction = _reply.data;
+                        toastr["info"]("ดำเนินการเรียกรับบริการแล้วค่ะ");
+
+                        sendtoserial(` >${TRANSACTION_SLIP_NUMBER_LABEL.innerText}<`);
+
+                    } else {
+                        toastMixin.fire({
+                            title: JSON.stringify(_reply),
+                            icon: "error",
+                        });
+                    }
+                }
+            }
+
+        },
+    };
+    toastr["info"]("ยินดีต้อนรับระบบ Q PSK ขอบคุณที่ใช้บริการค่ะ");
+
+    function show_info(msg, title, icon) {
+        Swal.fire({
+            toast: true,
+            position: 'top-start',
+            icon: icon,
+            title: title,
+            html: msg,
+            timer: 3000,
+            showConfirmButton: false,
+        });
+
+    }
+
+    function setBtn_Transition_Control_Active(value) {
+        TRANSACTION_CANCEL_BTN.disabled = !value;
+        TRANSACTION_RECALL_BTN.disabled = !value;
+        TRANSACTION_SUCCESS_BTN.disabled = !value;
+        CALL_SERVICE_TRANSACTION_BTN.disabled = value;
+        SERVICE_SELECT_INPUT.disabled = value;
+        CALL_SERVICE_ALL_INFO_BTN.disabled = value;
+    }
+
+    async function view_all_service() {
+        const _reply = await fetchApi(`/api/service/service_status/?caller_device=${DEVICE_CALLER}&service_id=0`, "get", null, "json");
+        if (!!_reply) {
+            if (_reply.success == true) {
+                const data = _reply.data[0];
+                const service_info = _reply.service_info;
+                debug(_reply.data);
+
+                const modal_service_all_info_content = document.getElementById("modal_service_all_info_content");
+                modal_service_all_info_content.innerHTML = "";
+                const temp = document.getElementById("template_content_service_info");
+                for (const e of _reply.data) {
+                    if (e.service_id == 0) {
+                        continue;
+                    }
+                    const _c = temp.content.cloneNode(true);
+                    _c.querySelector('[name="service_group"]').innerHTML = e.group;
+                    _c.querySelector('[name="service_name"]').innerHTML = e.name;
+                    _c.querySelector('[name="service_wait_count"]').innerHTML = "รอรับบริการ " + e.count + " ราย";
+                    _c.querySelector('[name="service_select_btn"]').value = e.service_id;
+
+                    modal_service_all_info_content.appendChild(_c);
+                }
+
+
+                modal_service_all_info.showModal();
+
+            } else {
+                toastMixin.fire({
+                    title: JSON.stringify(_reply),
+                    icon: "error",
+                });
+            }
+        }
+    }
+
+    async function select_service_by_btn(service_id) {
+        SERVICE_SELECT_INPUT.value = service_id;
+        select_service(service_id);
+    }
+
+    async function select_service(service_id) {
+        if (service_id < 0) {
+            return;
+        }
+
+        const _reply = await fetchApi(`/api/service/service_status/?caller_device=${DEVICE_CALLER}&service_id=${service_id}`, "get", null, "json");
+        if (!!_reply) {
+            if (_reply.success == true) {
+                const data = _reply.data[0];
+                const service_info = _reply.service_info;
+                //debug(_reply.data);
+                SERVICE_ID = service_info.Service.id;
+                SERVICE_GROUP_LABLE.innerHTML = service_info.Service.group;
+                TRANSACTION_OBJ.group = service_info.Service.group;
+                const last_transaction_in_service = service_info.Transaction;
+                if (last_transaction_in_service) {
+                    LAST_TRANSACTION_LABEL.innerHTML = last_transaction_in_service.number;
+                } else {
+                    LAST_TRANSACTION_LABEL.innerHTML = "ยังไม่มีการรับบริการ";
+                }
+                SERVICE_WAIT_COUNT_LABEL.innerHTML = data.count;
+                SERVICE_WAIT_COUNT_ALL_LABEL.innerHTML = service_info.wait_all;
+                if (data.count > 0) {
+                    CALL_SERVICE_TRANSACTION_BTN.disabled = false;
+                } else {
+                    CALL_SERVICE_TRANSACTION_BTN.disabled = true;
+                }
+
+            } else {
+                toastMixin.fire({
+                    title: JSON.stringify(_reply),
+                    icon: "error",
+                });
+            }
+        }
+    }
+
+    async function call_service_transaction() {
+        if (COUNTER_NO == "") {
+            setting_counter_service();
+            return;
+        }
+        if (SERVICE_ID == -1) {
+            Swal.fire({
+                //toast: true,
+                //position: 'top-start',
+                icon: "warning",
+                title: "ขออภัยค่ะ",
+                html: "ท่านยังไม่มีการเลือกบริการที่ต้องการค่ะ",
+
+            });
+            return;
+        }
+
+        debug("call_service_trancaction of service " + SERVICE_ID);
+        const _reply = await fetchApi(`/api/service/service_call/?caller_device=${DEVICE_CALLER}&service_id=${SERVICE_ID}`, "post", null, "json");
+        if (!!_reply) {
+            if (_reply.success == true) {
+                const transaction = _reply.data;
+                debug(transaction);
+                TRANSACTION_OBJ.id = transaction.id;
+                TRANSACTION_OBJ.number = transaction.number;
+
+                TRANSACTION_MACHINE_PRINTER_LABEL.innerHTML = transaction.machine;
+                const _d = dateTimeToStr(transaction.createDate, "YYYY/MM/DD@HH:mm:ss");
+                const datetime = _d.split("@");
+                TRANSACTION_CREATE_DATE_LABEL.innerHTML = datetime[1];
+                TRANSACTION_SLIP_NUMBER_LABEL.innerHTML = `${TRANSACTION_OBJ.group}${TRANSACTION_OBJ.number}`;
+                CALL_SERVICE_TRANSACTION_BTN.disabled = true;
+                setBtn_Transition_Control_Active(true);
+
+                sendtoserial(`   ${TRANSACTION_SLIP_NUMBER_LABEL.innerText}`);
+
+
+            } else {
+                toastMixin.fire({
+                    title: JSON.stringify(_reply),
+                    icon: "error",
+                });
+            }
+        }
+
+    }
+
+    function web_socket_event(params) {
+        const caller_kiosk = params.caller_kiosk;
+        if (caller_kiosk) {
+            if (caller_kiosk.cmd == "update") {
+                if (caller_kiosk.service_id == SERVICE_ID) {
+                    select_service(SERVICE_ID);
+                    toastr["info"](`Q PSK มีรายการ ${caller_kiosk.number} ขอรับบริการค่ะ`);
+                } else {
+                    SERVICE_WAIT_COUNT_ALL_LABEL.innerHTML = caller_kiosk.wait_all;
+                }
+            }
+        }
+
+        const monitor_kiosk = params.monitor_kiosk;
+
+        if (monitor_kiosk) {
+            debug(monitor_kiosk)
+            const service_info = monitor_kiosk.service_info;
+            debug(service_info)
+            if (service_info) {
+                for (const service of service_info) {
+                    const service_id = service.service_id;
+                    const wait_count = service.wait_count;
+                    if (service_id == SERVICE_ID) {
+                        SERVICE_WAIT_COUNT_LABEL.innerText = wait_count;
+                    }
+                    if (service_id == 0) {
+                        SERVICE_WAIT_COUNT_ALL_LABEL.innerText = wait_count;
+                    }
+                }
+            }
+
+        }
+    }
+    ws_event_subscription = web_socket_event
+
+</script>
+
+<script type="text/javascript">
+    async function evaluate_js_async(params) {
+        debug(params)
+
+        if (params.data == "SUCCESS") {
+            get_printer_ready = true;
+            toastr["success"](params.data);
+        } else {
+            toastr["info"](params.data);
+        }
+    }
+
+
+
+    async function setting_counter_service() {
+        const { value: counter_no } = await Swal.fire({
+            title: `Counter : ${COUNTER_NO}`,
+            input: 'select',
+            inputOptions: {
+                'ตัวเลข': {
+                    "1": "counter 1",
+                    "2": "counter 2",
+                    "3": "counter 3",
+                    "4": "counter 4",
+                    "4": "counter 5",
+                    "6": "counter 6",
+                    "7": "counter 7",
+                    "8": "counter 8",
+                    "9": "counter 9",
+                    "10": "counter 10",
+
+                },
+                'ตัวอักษร': {
+                    "A": 'counter A',
+                    "B": 'counter B',
+                    "C": 'counter C',
+                    "D": 'counter D',
+                    "E": 'counter E',
+                    "F": 'counter F',
+
+                },
+            },
+            inputPlaceholder: 'Select ช่องบริการ',
+            showCancelButton: true,
+            //inputValidator: (value) => {
+            //    return new Promise((resolve) => {
+            //        if (value === 'oranges') {
+            //            resolve()
+            //        } else {
+            //            resolve('You need to select oranges :)')
+            //        }
+            //    })
+            //}
+        })
+
+        if (counter_no) {
+            Swal.fire(`You selected: ${counter_no}`)
+            const json_obj = {
+                cmd: "set_counter",
+                set_counter: counter_no,
+            };
+            const json_msg = JSON.stringify(json_obj);
+            debug(json_msg);
+            android_webview.postMessage(json_msg);
+        }
+
+    }
+    if (COUNTER_NO == "") {
+        setting_counter_service();
+    }
+</script>
+
+{% if last_service %}
+<script>
+    toastr["warning"](`Q PSK มีรายการ ให้บริการคงค้าง {{last_service.Service.group}}{{last_service.Transaction.number}}`);
+    TRANSACTION_OBJ.id = "{{last_service.Transaction.id}}";
+    TRANSACTION_OBJ.number = "{{last_service.Transaction.number}}";
+
+    TRANSACTION_MACHINE_PRINTER_LABEL.innerHTML = "{{last_service.Transaction.machine}}";
+    TRANSACTION_CREATE_DATE_LABEL.innerHTML = "{{last_service.Transaction.createDate}}";
+    TRANSACTION_SLIP_NUMBER_LABEL.innerHTML = "{{last_service.Service.group}}{{last_service.Transaction.number}}";
+    CALL_SERVICE_TRANSACTION_BTN.disabled = true;
+    setBtn_Transition_Control_Active(true);
+
+
+</script>
+{% endif %}
+
+
+</html>

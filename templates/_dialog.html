@@ -1,0 +1,144 @@
+<dialog id="Dialog_Info_Transection" class="modal">
+    <div class="max-w-4xl border-4 modal-box border-info ">
+        <form method="dialog">
+            <button class="absolute btn btn-sm btn-circle btn-primary right-2 top-2">✕</button>
+        </form>
+        <h3 class="text-lg font-semibold text-primary" data-filed="title">
+            ข้อมูลการทำรายการ
+        </h3>
+        <div class="flex flex-col gap-2 lg:px-8">
+            <div class="p-4 font-semibold " data-filed="card_id">
+                card_id
+            </div>
+            <ol class="relative border-l-4 border-gray-200" data-filed="content_time_line">
+            </ol>
+            <div class="stat border border-info rounded-btn overflow-x-auto">
+                <div class="stat-title p-1">
+                    <i class="fa-2x px-2 fa-solid fa-file-invoice-dollar text-info"></i>
+                    <span class="ml-2 badge badge-success badge-lg text-2xl text-nowrap" data-filed="transaction_type">ประเภทรายการ</span>
+                    รูปแบบค่าบริการ :
+                    <span class="ml-2" data-filed="service_fee"></span>
+                </div>
+                <div class="stat-title p-1"><i class="fa-2x px-2 fa-solid fa-clock text-info"></i>เวลาจอด <span class="ml-2 badge badge-success badge-lg text-2xl text-nowrap"
+                        data-filed="parked"></span></div>
+                <div class="stat-title p-1">
+                    <i class="fa-2x px-2 fa-solid fa-cash-register text-success"></i>
+                    <span class="ml-2 badge badge-success badge-lg text-2xl text-nowrap" data-filed="transaction_pay_type">-</span>
+                    ค่าบริการ :
+                    <span class="ml-2" data-filed="transaction_pay_amount">N/A</span>
+                </div>
+                <div class="stat-title p-1"><i class="fa-2x px-2 fa-solid fa-circle-info text-info"></i><span class="ml-2 badge badge-info badge-lg" data-filed="status"></span>
+                </div>
+                <div class="stat-title p-1"><i class="fa-2x px-2 fa-solid fa-note-sticky text-info"></i><span class="ml-2" data-filed="remark"></span></div>
+            </div>
+        </div>
+        <div class="modal-action">
+            <form method="dialog" class="">
+                <button class=" btn btn-warning btn-lg">
+                    <i class="text-white fa-solid fa-circle-xmark fa-2x"></i> Close
+                </button>
+            </form>
+        </div>
+    </div>
+</dialog>
+
+<dialog id="Dialog_Info" class="modal">
+    <div class="border-4 modal-box border-info">
+        <form method="dialog">
+            <button class="absolute btn btn-sm btn-circle btn-primary right-2 top-2">✕</button>
+        </form>
+        <div class=""><i class="fa-solid fa-circle-info fa-2xl text-info"></i><span class="ml-4 text-xl font-bold" data-filed="title">Info</span></div>
+        <div class="overflow-scroll">
+            <p class="p-4" data-filed="msg">Success data</p>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
+<dialog id="Dialog_Success" class="modal">
+    <div class="border-4 modal-box border-success">
+        <form method="dialog">
+            <button class="absolute btn btn-sm btn-circle btn-success right-2 top-2">✕</button>
+        </form>
+        <div class=""><i class="fa-solid fa-circle-check fa-2xl text-success"></i><span class="ml-4 text-xl font-bold" data-filed="title">Success</span></div>
+        <div class="overflow-scroll">
+            <p class="p-4" data-filed="msg">Success data</p>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
+<dialog id="Dialog_Warning" class="modal">
+    <div class="border-4 modal-box border-warning">
+        <form method="dialog">
+            <button class="absolute btn btn-sm btn-circle btn-warning right-2 top-2">✕</button>
+        </form>
+        <div class=""><i class="fa-solid fa-triangle-exclamation fa-2xl text-warning"></i><span class="ml-4 text-xl font-bold" data-filed="title">Warning</span></div>
+        <div class="overflow-scroll">
+            <p class="p-4" data-filed="msg">Success data</p>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
+<dialog id="Dialog_Error" class="modal">
+    <div class="border-4 modal-box border-error">
+        <form method="dialog">
+            <button class="absolute btn btn-sm btn-circle btn-error right-2 top-2">✕</button>
+        </form>
+        <div class=""><i class="fa-solid fa-circle-exclamation fa-2xl text-error"></i><span class="ml-4 text-xl font-bold" data-filed="title">Error</span></div>
+        <div class="overflow-scroll">
+            <p class="p-4" data-filed="msg">Success data</p>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
+<dialog id="Dialog_Confirm" class="modal">
+    <div class="border-4 modal-box border-primary">
+        <div class=""><i class="fa-solid fa-circle-check fa-2xl text-primary"></i><span class="ml-4 text-xl font-bold" data-filed="title">Dialog_Confirm</span></div>
+        <p class="p-4" data-filed="content">Dialog_Confirm</p>
+        <div class="modal-action">
+            <form method="dialog" class="flex justify-between w-full gap-2">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class=" btn btn-warning btn-lg">
+                    <i class="text-white fa-solid fa-circle-xmark fa-2x"></i> ยกเลิก
+                </button>
+                <button class=" btn btn-primary btn-lg" data-filed="confim_btn">
+                    <i class="text-white fa-solid fa-circle-check fa-2x"> </i> ตกลง
+                </button>
+            </form>
+        </div>
+    </div>
+</dialog>
+
+<dialog id="Dialog_Loading" class="modal">
+    <div class="modal-box w-fit">
+        <div class="text-center">
+            <span class="loading loading-spinner loading-lg text-warning"></span>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
+<dialog id="Dialog_Preview_Image" class="modal">
+    <div class="bg-transparent min-h-96 modal-box">
+        <img data-filed="image_box" class="mx-auto rounded-box min-w-80" src="/static/image/Image_not_available.png" alt="PKSOFTTECH" />
+        <div class="inline-flex justify-center w-full mt-4">
+            <button class="btn btn-lg btn-circle btn-error ring-2 " onclick="Dialog_Preview_Image.close();"><i class="fa-solid fa-xmark fa-2x"></i></button>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>

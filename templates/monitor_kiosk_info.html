@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% include '_meta.html' %}
+</head>
+
+<body class="flex flex-col bg-green-500">
+    <div class="grid grid-cols-2 gap-4 ">
+        <!-- Left Panel -->
+        <div class="flex flex-col gap-2 bg-green-500 rounded-md ">
+            <div class="bg-green-600 text-white text-6xl p-4 text-center rounded-md font-bold" id="clock_display">-</div>
+            <div class="" style="height: 60%;">
+                <div class="flex flex-col justify-end h-56">
+                    <div class="w-fit mx-auto animate-bounce  font-bold rounded-md bg-white p-8 ring-4 text-4xl" id="current_call" style="letter-spacing: 8px;">
+                        no items.
+                    </div>
+                    <div class="stat h-24">
+                        <div class="stat-figure text-secondary">
+                            <div class="avatar">
+                                <div class="w-16 rounded-full">
+                                    <img src="/static/image/grab_logo.jpg" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" stat-value">
+                            <div class=" inline-flex gap-4 items-baseline">
+                                <div class="badge badge-neutral badge-lg">Time Call</div>
+                                <p id="current_call_time">-</p>
+                            </div>
+                        </div>
+                        <!-- <div class="stat-title">11/12/2024</div> -->
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center">
+                    <img class="h-60 rounded-full" src="/static/image/grab_logo.jpg" />
+                </div>
+            </div>
+        </div>
+        <!-- Right Panel -->
+        <div class="">
+            <div class="bg-green-600 text-white text-6xl p-4 text-center rounded-md font-bold">
+                List Items
+            </div>
+            <div class="p-4">
+                <!-- <table id="table_service" class="table text-xl table-zebra bg-green-400"> -->
+                <table id="table_service" class="table text-xl bg-green-400">
+                    <tbody id="tbody_service" class=" font-extrabold text-center text-white">
+                        {% for on_call in monitor_services %}
+                        <tr class="">
+                            <td class="text-left">
+                                {{on_call[0]}}
+                            </td>
+                            <td class="">
+                                {{on_call[1]}}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <template id="template_content_service">
+                        <tr class="">
+                            <td name="col01" class="text-left">
+                                001
+                            </td>
+                            <td name="col02" class="">
+                                002
+                            </td>
+                        </tr>
+                    </template>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed inset-x-0 bottom-0 flex w-full items-center px-2 shadow-lg rounded-t-xl bg-white opacity-90">
+        <div class="z-10 w-32 bg-white ">
+            <div class="avatar">
+                <div class="w-20 rounded-full ring-2">
+                    <img src="/static/image//grab_logo.jpg" />
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col">
+            <marquee class="p-1 overflow-hidden text-4xl max-w-max">
+                <span class="text-success font-bold">
+                    Service calling system is a system used to manage and control service calls or waiting of customers or users in various places such as hospitals,
+                    shopping
+                    malls, restaurants, etc. The main goal of service calling system is to reduce waiting time and increase efficiency in providing services to customers or
+                    users
+                    in general.
+                </span>
+            </marquee>
+        </div>
+    </div>
+
+    <footer class="fixed inset-x-0 bottom-0 items-center rounded-lg footer">
+        <p class="pl-2 text-xs">Copyright © 2021 - All right reserved</p>
+    </footer>
+
+</body>
+{% include '_script.html' %}
+<script>
+    const SOUNDS_PATH = "{{sounds_path}}";
+</script>
+<script type="module" src="/static/js/monitor_kiosk_info.js?t={{now}}"></script>
+
+</html>

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+
+<head>
+    {% include '_meta.html' %}
+
+    <style>
+        /* Center the loader */
+        #loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 1;
+            width: 120px;
+            height: 120px;
+            margin: -76px 0 0 -76px;
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="flex flex-col h-screen bg-scroll bg-center bg-no-repeat bg-auto bg-base-300" style="background-image: url('/static/image/logo.png')">
+    <div id="loader"></div>
+    <select class="px-1 bg-transparent border rounded-btn border-primary w-fit" data-choose-theme>
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+        <option value="night">Night</option>
+        <option value="dracula">dracula</option>
+        <option value="coffee">coffee</option>
+        <option value="nord">Nord</option>
+        <option value="emerald">Emerald</option>
+        <option value="corporate">Corporate</option>
+        <option value="retro">Retro</option>
+        <option value="forest">Forest</option>
+        <option value="business">Business</option>
+        <option value="sunset">Sunset</option>
+        <option value="dim">Dim</option>
+        <option value="winter">Winter</option>
+    </select>
+    <div id="error_box" class="alert alert-error" style="display: none;">
+        <i class="fa-solid fa-circle-exclamation fa-2xl" style="color: #f70202;"></i>
+        <span>ไม่สามารถเชื่อมต่อเครื่องพิมพ์ได้ กรุณาแจ้งเจ้าหน้าที่ค่ะ</span>
+        <button class="btn btn-outline btn-warning" onclick="connect_printer()">Connect Printer</button>
+    </div>
+    <div class="flex flex-col h-full gap-2 p-4">
+        {% if system_services %}
+        <div class="pb-2 join">
+            <select id="PRINTER_SELECT" onchange="select_printer(this.value);" class="w-full max-w-xs text-lg select select-warning">
+                <option disabled selected>Edit Printre</option>
+                <option value="1">printer01</option>
+                <option value="2">printer02</option>
+                <option value="3">printer03</option>
+                <option value="4">printer04</option>
+                <option value="5">printer05</option>
+            </select>
+            <div class="px-8 text-2xl text-warning">PRINTER ID : {{PRINTER_SELECT}}</div>
+            <a href="/" class="btn btn-square btn-outline btn-primary">
+                <i class="fa-solid fa-house"></i>
+            </a>
+        </div>
+        <div class="flex flex-row gap-4">
+            <div class="w-48 alert">
+                <span>Set Language</span>
+            </div>
+            <select id="PRINTER_LANGUAGE" onchange="select_language(this.value);" class="px-4 select select-info">
+                <option disabled selected>Language</option>
+                <option>Thai</option>
+                <option>English</option>
+                <option>Chinese</option>
+                <option>Burmese</option>
+                <option>Japanese</option>
+            </select>
+        </div>
+        <button class="mb-2 btn btn-outline btn-warning" onclick="edit_printer_apply()">นำไปใช้งาน (reload printer)</button>
+        {% endif %}
+        <div class="w-full h-full">
+            <div class="flex flex-row ">
+                <div class="flex flex-col">
+                    <div class="z-10 ">
+                        <div class="avatar">
+                            <div class="w-20 rounded-full">
+                                <img src="/static/image/logo.png" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col">
+                    <marquee direction="left" scrolldelay="150" class="p-2 text-2xl text-success ">
+                        <span>
+                            {{info_title}}
+                        </span>
+                    </marquee>
+                    <marquee class="p-1 overflow-hidden text-xl max-w-max">
+                        <span>
+                            {{info_text}}
+                        </span>
+                    </marquee>
+                </div>
+
+                {% if system_services %}
+                <button class="btn btn-sm btn-circle btn-outline " onclick="modal_config_info_msg.showModal()">
+                    <i class="text-warning fa-solid fa-gear"></i>
+                </button>
+                {% endif %}
+            </div>
+            {% include '_printer_kiosk_template.html' %}
+        </div>
+        <footer class="fixed inset-x-0 bottom-0 items-center px-4 rounded-lg footer">
+            <div class="flex justify-between w-full">
+                <div class="flex items-center gap-2">
+                    <div class="avatar">
+                        <div class="w-10 rounded-full">
+                            <img src="/static/image/logo.png" />
+                        </div>
+                    </div>
+                    <p class="text-xs">Copyright © 2021 - All right reserved</p>
+                    <div class="badge badge-primary badge-lg">{{printer_name}}</div>
+                    {% if system_services %}
+                    <button class="btn btn-sm btn-circle btn-outline " onclick="modal_config_printer_name.showModal()">
+                        <i class="text-warning fa-solid fa-gear"></i>
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </footer>
+
+        <!-- Put this part before </body> tag -->
+        <input type="checkbox" id="modal_wait_for_print_success" class="modal-toggle" />
+        <div class="modal">
+
+            <div class="shadow-xl card card-compact w-96 bg-base-100">
+                <figure class="p-4"><img src="/static/image/logo.png" alt="QPKS" /></figure>
+                <div class="card-body">
+                    <h2 class="text-2xl">กำลังพิมพ์บัตรค่ะ</h2>
+                    <!-- <p>If a dog chews shoes whose shoes does he choose?</p> -->
+                    <div class="loading loading-spinner text-warning"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <dialog id="modal_config_info_msg" class="modal">
+            <form method="dialog" class="modal-box">
+                <h3 class="text-lg font-bold">Edit Information</h3>
+                <div class="flex flex-col gap-2">
+                    <label class="">Info Header</label>
+                    <textarea id="INFO_TITLE" class="textarea textarea-primary" placeholder=""></textarea>
+                    <label class="">Info Message</label>
+                    <textarea rows="6" id="INFO_TEXT" class="textarea textarea-primary" placeholder=""></textarea>
+                </div>
+
+                <div class="modal-action">
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn btn-primary" onclick="update_info_printer()">Success</button>
+                    <button class="btn btn-accent">Close</button>
+                </div>
+            </form>
+        </dialog>
+
+        <dialog id="modal_config_printer_name" class="modal">
+            <form method="dialog" class="modal-box">
+                <h3 class="text-lg font-bold">Edit Information</h3>
+                <div class="flex flex-col gap-2">
+                    <label class="">Printer Name</label>
+                    <input id="PRINTER_NAME" value="{{printer_name}}" class="w-full input input-bordered input-primary" placeholder="Number"></input>
+                </div>
+
+                <div class="modal-action">
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn btn-primary" onclick="update_info_printer()">Success</button>
+                    <button class="btn btn-accent">Close</button>
+                </div>
+            </form>
+        </dialog>
+
+
+        <dialog id="modal_config_video" class="modal">
+            <form method="dialog" class="modal-box">
+                <h3 class="text-lg font-bold">Edit video Information</h3>
+                <div class="flex flex-col gap-2">
+                    <label class="">Up load video</label>
+                    <input id="INFO_VIDEO_UPLOAD" type="file" accept=".mp4" class="w-full max-w-xs file-input file-input-bordered file-input-primary" />
+                </div>
+
+                <div class="modal-action">
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn btn-primary" onclick="update_info_printer_video()">Success</button>
+                    <button class="btn btn-accent">Close</button>
+                </div>
+            </form>
+        </dialog>
+
+</body>
+{% include '_script.html' %}
+
+<script>
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-top-left",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "3000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+<script type="text/javascript">
+    toastr["info"]("Welcome to the Q PSK system. Thank you for using the service.");
+
+    const qpks_start = new Howl({
+        src: ['{{sounds_path}}qpks_start.mp3']
+    });
+
+    const sound_printer_error = new Howl({
+        src: ["{{sounds_path}}printer_error.mp3"]
+    });
+
+    const sound_get_card = new Howl({
+        src: ["{{sounds_path}}get_q_card.mp3"]
+    });
+
+    qpks_start.play();
+    //setTimeout(play_qpks, 5000);
+
+    let get_printer_ready = false;
+    async function req_service_transaction(service_id) {
+        const json_msg = JSON.stringify({ cmd: "printer_status" });
+
+        try {
+            android_webview.postMessage(json_msg);
+        } catch (e) {
+            toastr["warning"]("ทดสอบโดย_System");
+            setTimeout(() => {
+                get_printer_ready = true;
+                document.getElementById("loader").style.display = "none";
+            }, 500);
+        }
+
+        get_printer_ready = false;
+        //document.getElementById("modal_wait_for_print_success").checked = true;
+        document.getElementById("loader").style.display = "block";
+
+        for (let index = 0; index < 50; index++) {
+            await sleep(100);
+            if (get_printer_ready) {
+                await req_service_qpks(service_id);
+                break;
+            }
+        }
+
+        if (!get_printer_ready) {
+            //document.getElementById("modal_wait_for_print_success").checked = false;
+            document.getElementById("loader").style.display = "none";
+            Swal.fire(
+                {
+                    title: 'Q PSK',
+                    text: "ไม่สามารถพิมพ์ได้กรุณาติดต่อเจ้าหน้าที่ค่ะ",
+                    icon: 'error',
+                }
+            )
+        }
+        get_printer_ready = false;
+    }
+
+    async function req_service_qpks(service_id) {
+        const formData = new FormData();
+        formData.append("machine", "{{printer_name}}");
+        formData.append("service_id", service_id);
+        const _reply = await fetchApi("/api/transaction/", "post", formData, "json");
+
+        if (!!_reply) {
+            if (_reply.success == true) {
+                const data = _reply.data
+                const transaction = data[0]
+                const slip_url = `api/service/service_call/slip_image/?transaction_id=${transaction.id}`;
+                const json_obj = {
+                    cmd: "print_slip",
+                    slip_url: slip_url
+                };
+                const json_msg = JSON.stringify(json_obj);
+                try {
+                    android_webview.postMessage(json_msg);
+                } catch (e) {
+                    toastr["warning"]("ทดสอบโดย_System");
+                }
+
+            } else {
+                toastMixin.fire({
+                    title: JSON.stringify(_reply),
+                    icon: "error",
+                });
+            }
+
+        }
+    }
+
+</script>
+
+<script>
+    async function evaluate_js_async(params) {
+        debug(params)
+
+        if (params.data == "PRINTER_READY" & get_printer_ready == false) {
+            get_printer_ready = true;
+            document.getElementById("error_box").style.display = "none";
+            //toastr["success"](params.data);
+        }
+        else if (params.data == "Printer Success") {
+            //document.getElementById("modal_wait_for_print_success").checked = false;
+            document.getElementById("loader").style.display = "none";
+            toastr["success"]("กรุณารับบัตรค่ะ");
+            sound_get_card.play();
+        }
+
+        else {
+            toastr["info"](params.data);
+        }
+
+        if (params.data == "Connect Printer: null" || params.data == "PRINTER_IS_NONE") {
+            //document.getElementById("modal_wait_for_print_success").checked = false;
+            document.getElementById("error_box").style.display = "block";
+
+        }
+
+    }
+
+    async function connect_printer() {
+        const json_obj = {
+            cmd: "printer_status",
+        };
+        const json_msg = JSON.stringify(json_obj);
+        android_webview.postMessage(json_msg);
+    }
+
+    function web_socket_event(params) {
+        const printer_kiosk = params.printer_kiosk;
+        if (printer_kiosk) {
+            if (printer_kiosk.reload) {
+                toastr["warning"](`Q PSK RELOAD`);
+                setTimeout(() => { window.location.reload(); }, 1000);
+                return;
+            }
+        }
+    }
+    ws_event_subscription = web_socket_event
+
+
+</script>
+
+<script>
+    // For Login Page
+
+    window.addEventListener('DOMContentLoaded', () => {
+        document.getElementById("loader").style.display = "none";
+    });
+</script>
+
+{% if system_services %}
+<script>
+    const PRINTER_ID = "{{PRINTER_SELECT}}";
+    document.getElementById("PRINTER_SELECT").value = "{{PRINTER_SELECT}}";
+    document.getElementById("PRINTER_LANGUAGE").value = "{{PRINTER_LANGUAGE}}";
+
+    async function select_printer(printer_id) {
+        window.location.href = `/printer_kiosk?system_config=1&printer_id=${printer_id} `;
+    }
+
+    function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+
+    toastr["warning"](`Q PSK MODE EDITING`);
+    const INFO_TITLE = document.getElementById("INFO_TITLE");
+    INFO_TITLE.value = '{{info_title}}';
+    const INFO_TEXT = document.getElementById("INFO_TEXT");
+    INFO_TEXT.value = '{{info_text}}';
+
+    const PRINTER_NAME = document.getElementById("PRINTER_NAME");
+    PRINTER_NAME.value = '{{printer_name}}';
+
+
+    const INFO_VIDEO_UPLOAD = document.getElementById("INFO_VIDEO_UPLOAD");
+
+    async function update_info_printer() {
+        const formData = new FormData();
+        formData.append("printer_id", PRINTER_ID);
+        formData.append("printer_name", PRINTER_NAME.value);
+        formData.append("info_title", INFO_TITLE.value);
+        formData.append("info_text", INFO_TEXT.value);
+
+        debug_form(formData);
+        const _reply = await fetchApi(`/api/app_config/app_config_printer/`, "post", formData, "json");
+        if (!!_reply) {
+            if (_reply.success == true) {
+                const transaction = _reply.data;
+                toastr["success"](`${_reply.data} `);
+
+            } else {
+                toastMixin.fire({
+                    title: JSON.stringify(_reply),
+                    icon: "error",
+                });
+            }
+        }
+    }
+
+    async function update_info_printer_video() {
+        if (INFO_VIDEO_UPLOAD.files[0]) {
+            const maxAllowedSize = 50 * 1024 * 1024;
+            if (INFO_VIDEO_UPLOAD.files[0].size > maxAllowedSize) {
+                Swal.fire(
+                    'ข้อผิดพลาด?',
+                    'File มีขนาดใหญ่ไม่สามารถ ดำเนินการได้',
+                    'error'
+                );
+                return;
+            }
+            if (!(await dialog_confirm({ text: "การ upload video จะแทนที่ video เดิม !" }))) return;
+            document.getElementById("loader").style.display = "block";
+            const formData = new FormData();
+            formData.append("printer_id", PRINTER_ID);
+            formData.append("printer_video", INFO_VIDEO_UPLOAD.files[0], "printer_video.mp4");
+            const _reply = await fetchApi(`/api/app_config/app_config_printer_video/`, "post", formData, "json");
+            document.getElementById("loader").style.display = "none";
+            if (!!_reply) {
+                if (_reply.success == true) {
+                    const transaction = _reply.data;
+                    toastr["success"](`${_reply.data} `);
+                    window.location.reload();
+
+                } else {
+                    toastMixin.fire({
+                        title: JSON.stringify(_reply),
+                        icon: "error",
+                    });
+                }
+            }
+        }
+
+    }
+
+    async function select_language(language) {
+        const formData = new FormData();
+        formData.append("printer_id", PRINTER_ID);
+        formData.append("language", language);
+        debug_form(formData);
+        const _reply = await fetchApi(`/api/app_config/app_config_printer/`, "post", formData, "json");
+        if (!!_reply) {
+            if (_reply.success == true) {
+                const transaction = _reply.data;
+                toastr["success"](`${_reply.data} `);
+
+            } else {
+                toastMixin.fire({
+                    title: JSON.stringify(_reply),
+                    icon: "error",
+                });
+            }
+        }
+    }
+
+    async function edit_printer_apply() {
+        const _reply = await fetchApi(`/api/app_config/app_config_printer_reload/`, "post", null, "json");
+        if (!!_reply) {
+            if (_reply.success == true) {
+                toastr["success"](`${_reply.data}`);
+
+            } else {
+                toastMixin.fire({
+                    title: JSON.stringify(_reply),
+                    icon: "error",
+                });
+            }
+        }
+    }
+
+</script>
+{% endif %}
+
+</html>

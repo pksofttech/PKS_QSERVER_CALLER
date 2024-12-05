@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include '_meta.html' %}
+</head>
+
+<body class="">
+    <div class="min-h-screen overflow-hidden hero" style="background-image: url({{owner_logo}});">
+        <div class="hero-overlay bg-opacity-60"></div>
+        <div class="flex flex-col items-center justify-center p-4 bg-opacity-75 max-w-96 rounded-box bg-base-200">
+            <div class="avatar animate-bounce [animation-duration:3s]">
+                <div class="ring-primary ring-offset-base-100 w-24 rounded-full ring ring-offset-2">
+                    <img src="/static/favicon.svg" />
+                </div>
+            </div>
+            <!-- <img class=" min-w-60 mask mask-circle" src="/static/favicon.svg" /> -->
+            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <h1 class="w-full text-xl font-bold leading-tight tracking-tight text-center text-primary md:text-2xl">
+                    QPKS AUTO MANAGEMENT <br> <span class="badge badge-primary text-info text-xs font-sans">App For You</span>
+                </h1>
+                <div class="max-w-sm px-4 space-y-4">
+                    <select id="input_app_mode" class="w-full text-center select select-ghost">
+                        <option value="SYSTEM" selected>MANAGEMENT</option>
+                        <option value="CALLER">CALLER</option>
+                    </select>
+                    <div class="inline-flex items-center w-full gap-2">
+                        <i class="w-16 fa-solid fa-user fa-2x"></i>
+                        <input type="text" id="input_username_box" class="flex-grow input" placeholder="ชื่อผู้ใช้งาน" value="" required>
+                        <i class="w-16 text-center fa-solid fa-user fa-2x"></i>
+                    </div>
+                    <div class="inline-flex items-center w-full gap-2">
+                        <i class="w-16 fa-solid fa-key fa-2x"></i>
+                        <input type="password" name="password" id="input_password_box" placeholder="รหัสผ่าน" class="flex-grow input input-success" required="" value="">
+                        <button class="w-16 text-center" onclick="eye_password(this,'input_password_box')">
+                            <i class="fa-regular fa-eye-slash"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center justify-center">
+                        <input id="remember_check_box" aria-describedby="remember" type="checkbox" class="checkbox checkbox-primary" checked>
+                        <label for="remember_check_box" class="ml-2 text-primary">Remember me</label>
+                    </div>
+                    <button onclick="submit_login();" class="w-full text-2xl btn btn-primary btn-outline font-sans">เข้าระบบ/Login</button>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+    {% include '_dialog.html' %}
+</body>
+{% include '_script.html' %}
+<script type="module" src="/static/js/login.js?t={{now}}"></script>
+
+</html>

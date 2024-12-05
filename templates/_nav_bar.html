@@ -1,0 +1,120 @@
+<div class="relative top-0 w-full mb-2 navbar bg-base-300 rounded-box">
+    <div class="navbar-start">
+        <div class="flex items-center justify-start">
+            <label for="side-drawer" class="btn btn-square btn-ghost lg:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </label>
+            <div class="hidden lg:block">
+                <div class="flex mx-2 md:mr-24 ">
+                    <a href="/">
+                        <div class="avatar">
+                            <div class="w-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                                <img src="/static/favicon.svg" />
+                            </div>
+                        </div>
+                    </a>
+                    <span class="self-center ml-4 font-sans text-xl font-light  sm:text-2xl whitespace-nowrap">QPKS
+                        <div class="gap-2 py-2 badge  badge-secondary badge-lg">
+                            <i class="fa-solid fa-copyright "></i>
+                            pksofttech.org <div class="">@ v3.10</div>
+                        </div>
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="gap-1 pr-2 navbar-end">
+        <select class="px-1 bg-transparent border rounded-btn border-primary" data-choose-theme>
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+            <option value="night">Night</option>
+            <option value="dracula">dracula</option>
+            <option value="coffee">coffee</option>
+            <option value="nord">Nord</option>
+            <option value="emerald">Emerald</option>
+            <option value="corporate">Corporate</option>
+            <option value="retro">Retro</option>
+            <option value="forest">Forest</option>
+            <option value="business">Business</option>
+            <option value="sunset">Sunset</option>
+            <option value="dim">Dim</option>
+            <option value="winter">Winter</option>
+        </select>
+
+        <div class="dropdown dropdown-bottom dropdown-end">
+
+            <button tabindex="0" class="btn btn-ghost btn-circle" onclick="message_dropdown_btn_clock();">
+                <div class=" indicator">
+                    <i class="text-lg fa-solid fa-bell "></i>
+                    <span id="message_notification_count" class="badge badge-xs badge-primary indicator-item ">0</span>
+                </div>
+            </button>
+
+            <template id="message_dropdown_content_loading">
+                <span class="loading loading-dots loading-md "></span>
+            </template>
+
+            <template id="message_dropdown_content_li">
+                <li class="py-3 sm:py-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="flex-shrink-0">
+                            <img class="w-8 h-8 rounded-full" src="/static/image/logo.jpg" alt="Neil image">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-semibold truncate e">
+                                Notifications
+                            </p>
+                            <p class="text-sm truncate ">
+                                notifications
+                            </p>
+                        </div>
+                        <span
+                            class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                            <span class="w-2 h-2 mr-1 bg-green-500 rounded-full"></span>
+                            Available
+                        </span>
+                    </div>
+                </li>
+            </template>
+            <ul tabindex="0" id="message_dropdown_content" class="p-2 shadow-2xl z-[1]  dropdown-content menu bg-base-100 rounded-box">
+                <div class="px-4 py-3">
+                    <span class="block text-sm text-center text-gray-900 dark:text-white">Message</span>
+                </div>
+            </ul>
+        </div>
+
+        <div class="dropdown dropdown-bottom dropdown-end">
+            <button tabindex="0" class="btn btn-circle btn-sm focus:ring-4 focus:ring-gray-300">
+                <img class="w-8 h-8 rounded-full" src="{{user.pictureUrl}}" alt="user photo">
+            </button>
+
+            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52 glass">
+                <div class="mx-auto avatar">
+                    <div class="w-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                        <img src="/static/favicon.svg" />
+                    </div>
+                </div>
+                <div class="px-4 py-3">
+                    <span class="block text-sm ">{{user.username}}</span>
+                    <span class="block text-sm truncate text ">{{user.name}}</span>
+                </div>
+                <ul class="py-2 " aria-labelledby="user-menu-button">
+                    <!-- <li>
+                        <a href="/me/" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                            <i class="fa-solid fa-id-badge fs-lg"></i> <span class="ml-2">Profile </span> </a>
+                    </li> -->
+
+                    <li>
+                        <a role="button" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600" onclick="logout()"><i
+                                class="fa-solid fa-right-from-bracket fa-lg"></i> <span class="ml-2">Sign out</span> </a>
+                    </li>
+                </ul>
+
+            </ul>
+        </div>
+    </div>
+</div>

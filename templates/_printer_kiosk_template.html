@@ -1,0 +1,48 @@
+<div class="flex flex-col justify-start landscape:flex-row">
+    <div class="w-full p-4 ">
+
+        <div>
+            {% if video_path %}
+            <!-- <video class="mx-auto rounded-2xl min-h-60" muted autoplay loop> -->
+            <video class="mx-auto rounded-2xl min-h-60" muted loop>
+                <source src="{{video_path}}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            {% endif %}
+            <!-- {% if iframe_path %}
+            <iframe class="rounded-xl" width="100%" height="200" src="{{iframe_path}}" title="Thailand 4K Video - Beautiful Nature Scenery with Relaxing Music | 4K VIDEO ULTRA HD"
+                frameborder="0" allow="accelerometer; autoplay; muted; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" autoplay muted>
+            </iframe>
+            {% endif %} -->
+            {% if system_services %}
+            <span>
+                <button class="btn btn-sm btn-circle btn-outline " onclick="modal_config_video.showModal()">
+                    <i class="text-warning fa-solid fa-gear"></i>
+                </button>
+            </span>
+            {% endif %}
+        </div>
+
+    </div>
+
+
+    <div class="flex flex-col gap-4 p-4 overflow-auto ">
+        {% for l in services %}
+        <div>
+            <button onclick="req_service_transaction('{{l.Service.id}}')"
+                class="focus:outline-none w-full h-full py-1 {{text_size}} cursor-none btn ring rounded-3xl ring-blue-600 hover:bg-success "
+                style="color: {{l.Service.fg_color}}; background-color: {{l.Service.bg_color}}; opacity:0.9">
+                <div class="w-full join">
+                    <div class="inline-flex items-center justify-center w-14 h-14 {{text_size}} font-bold rounded-full text-primary bg-accent ring ring-blue-500">
+                        {{l.Service.group}}
+                    </div>
+                    <div class=" text-center w-full ml-4 truncate ...">
+                        {{l.Service.name}} {% if l.Service.tag %} <div class=" badge-primary">{{l.Service.tag}}</div> {% endif %}
+                    </div>
+                </div>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>

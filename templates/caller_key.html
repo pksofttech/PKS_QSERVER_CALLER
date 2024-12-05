@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html data-theme="apptheme">
+
+<head>
+    {% include '_meta.html' %}
+</head>
+
+<body class="container mx-auto h-screen bg-scroll bg-center bg-no-repeat bg-auto " style="background-image: url('/static/image/logo.jpg')">
+    <div class="w-full h-full p-4">
+        <div class="alert alert-info">
+            <p>Caller (เครื่องเรียกรับบริการ) <button onclick="setting_counter_service()" class="btn btn-xs btn-circle text-error"><i class="fa-solid fa-gear"></i></button></p>
+            <i class="p-2 fa-solid fa-volume-high fa-2xl"> ช่องบริการ {{caller_id}}</i>
+        </div>
+
+        <div class="w-full mt-2 card glass">
+            <div class="card-body">
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div class="w-full">
+                        <input class="input input-primary w-full text-7xl h-full text-center" value="กข1234" id="number_input_number">
+                    </div>
+                    <div class="w-full">
+                        <button onclick="call_service_transaction()" class="w-full btn btn-warning btn-lg h-full rounded-3xl text-7xl p-8">เรียกรับบริการ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full mt-2 bg-blue-500 bg-opacity-80 card">
+            <div class="text-orange-900 card-body">
+                <div>
+                    <div class="badge badge-accent badge-lg">เวลาออกรายการ </div> <span class="text-lg font-extrabold" id="TRANSACTION_CREATE_DATE_LABEL">-</span>
+                </div>
+                <div id="TRANSACTION_SLIP_NUMBER_LABEL" class="p-2 font-black text-center border-4 rounded-lg text-7xl border-success text-warning">----</div>
+                <button id="TRANSACTION_CANCEL_BTN" onclick="TRANSACTION_OBJ.set_cancle()" type="button" disabled class=" btn btn-error btn-lg">ยกเลิกรายการ</button>
+                <button id="TRANSACTION_RECALL_BTN" onclick="TRANSACTION_OBJ.re_call()" type="button" disabled class=" btn btn-warning btn-lg">เรียกรับบริการอีกครั้ง</button>
+
+                <button id="TRANSACTION_SUCCESS_BTN" onclick="TRANSACTION_OBJ.success()" type="button" disabled class="text-lg btn btn-success btn-lg">รับบริการสำเร็จ</button>
+            </div>
+        </div>
+
+    </div>
+    <footer class="fixed inset-x-0 bottom-0 items-center p-4 rounded-lg footer">
+        <div class="flex justify-between w-full">
+            <div class="flex">
+                <p>Copyright © 2021 - All right reserved</p>
+            </div>
+            <div class="">
+                <a>
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                </a>
+            </div>
+        </div>
+
+    </footer>
+    {% include '_dialog.html' %}
+</body>
+{% include '_script.html' %}
+<script type="module" src="/static/js/call_key.js?t={{now}}"></script>
+
+</html>

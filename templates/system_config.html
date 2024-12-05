@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html data-theme="apptheme">
+
+<head>
+	{% include '_meta.html' %}
+</head>
+
+<body class="flex flex-col ">
+	<!-- **NOTE -   Modal_System_User-->
+	<dialog id="Modal_System_User" class="modal">
+
+		<form method="dialog" id="form_system_user" class="modal-box bg-base-200">
+			<div class="flex flex-col gap-4">
+				<div class="">
+					<label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Login Name</label>
+					<input type="text" name="username" class="input_box_form" placeholder="login Name" required>
+
+				</div>
+
+				<div>
+					<label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">User Name</label>
+					<input type="text" name="name" class="input_box_form" placeholder="User Name">
+				</div>
+
+				<div>
+					<label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">User password</label>
+					<input type="password" name="password" required class="input_box_form" placeholder="password">
+				</div>
+
+				<div class="text-center">
+					<img src="/static/dist/img/img_not_found.png" id="preview-img-of-item" class="w-24 h-24 p-1 mx-auto mb-2 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+						alt="ไม่มีรูป" />
+
+					<div class="inline-flex p-1 border rounded-lg border-success">
+						<input type="file" class="rounded-lg" name="image_upload" accept="image/*" onchange="showPreview(event,'preview-img-of-item');" />
+					</div>
+				</div>
+
+				<div>
+					<label for="system_user_type_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">system_user_type</label>
+					<select id="system_user_type_id" name="system_user_type_id" required class="input_box_form">
+					</select>
+				</div>
+				<div class="sm:col-span-2">
+					<label for="remark" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Remark</label>
+					<textarea name="remark" rows="4" class="input_box_form" placeholder="หมายเหตุ"></textarea>
+				</div>
+			</div>
+
+			<div class="flex justify-between modal-action">
+				<button type="submit" class="w-24 btn btn-primary btn-outline" onclick=" submit_form_item('form_system_user')">
+					OK
+				</button>
+				<button class="w-24 btn btn-info btn-outline">Close</button>
+			</div>
+
+		</form>
+
+	</dialog>
+
+	<div class="drawer lg:drawer-open ">
+		<input id="side-drawer" type="checkbox" class="drawer-toggle" />
+		<div class="relative flex flex-col px-2 drawer-content">
+			{% include '_nav_bar.html' %}
+			<!-- Page content here -->
+			<div class="bg-base-200">
+				<div class="  border-primary rounded-btn border-2">
+					<div role="tablist" class=" tabs tabs-lifted">
+						<input type="radio" name="tab_control" role="tab" class="tab text-nowrap text-lg text-error" aria-label="⚙️ System Config" checked />
+						<div role="tabpanel" class="tab-content tab-content-custom ">
+							<div class="">
+								<div class="max-w-screen-xl px-4 py-4 mx-auto text-center ">
+									<div class="max-w-screen-sm mx-auto mb-2">
+										<p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">หมวดการตั้งค่าระบบ</p>
+									</div>
+									<div class="grid gap-8 lg:gap-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+										<div class="text-center text-gray-500 dark:text-gray-400">
+											<i class="py-8 mx-auto text-blue-500 fa-brands fa-quinscape fa-5x "></i>
+											<h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+												ข้อมูลกลุ่มบริการ
+											</h3>
+											<p>Q PKS</p>
+											<ul class="flex justify-center mt-4 space-x-4">
+												<li>
+													<a role="button" class="text-[#39569c] hover:text-gray-900 dark:hover:text-white">
+														<i class="fa-solid fa-xl fa-circle-info"></i>
+													</a>
+												</li>
+												<li>
+													<a role="button" href="/services" class="text-[#00acee] hover:text-gray-900 dark:hover:text-white">
+														<i class="fa-solid fa-sliders fa-xl"></i>
+													</a>
+												</li>
+
+											</ul>
+										</div>
+
+
+										<div class="text-center text-gray-500 dark:text-gray-400">
+											<i class="py-8 mx-auto text-blue-500 fa-5x fa-solid fa-tv"></i>
+											<h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+												จอแสดงข้อมูล
+											</h3>
+											<p>Q PKS</p>
+											<ul class="flex justify-center mt-4 space-x-4">
+												<li>
+													<a href="#" class="text-[#39569c] hover:text-gray-900 dark:hover:text-white">
+														<i class="fa-solid fa-xl fa-circle-info"></i>
+													</a>
+												</li>
+												<li>
+													<a href="/monitor_kiosk/?system_config=1
+													" class="text-[#00acee] hover:text-gray-900 dark:hover:text-white">
+														<i class="fa-solid fa-sliders fa-xl"></i>
+													</a>
+												</li>
+											</ul>
+										</div>
+
+										<div class="text-center text-gray-500 dark:text-gray-400">
+											<i class="py-8 mx-auto text-blue-500 fa-5x fa-solid fa-print"></i>
+											<h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+												เครื่องพิมพ์ Slip
+											</h3>
+											<p>Q PKS</p>
+											<ul class="flex justify-center mt-4 space-x-4">
+												<li>
+													<a href="#" class="text-[#39569c] hover:text-gray-900 dark:hover:text-white">
+														<i class="fa-solid fa-xl fa-circle-info"></i>
+													</a>
+												</li>
+												<li>
+													<a href="/printer_kiosk/?system_config=1" class="text-[#00acee] hover:text-gray-900 dark:hover:text-white">
+														<i class="fa-solid fa-sliders fa-xl"></i>
+													</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<input type="radio" name="tab_control" role="tab" class="tab text-nowrap text-lg" aria-label="🔐 System Users" />
+						<div role="tabpanel" class="tab-content tab-content-custom">
+							<div class="relative overflow-x-auto text-gray-500 shadow-md sm:rounded-lg ">
+								<table id="system_user_table" class="w-full display dark:text-gray-400">
+
+								</table>
+								<div class="p-4 mb-8 text-center">
+									<a role="button" id="btn_parking_lot_add_item" onclick="manager_system_user()" class="text-center dark:text-blue-500 hover:underline"><i
+											class="text-teal-500 fa-regular fa-square-plus"></i> สร้างผู้ใช้งาน</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% include '_side_menu_bar.html' %}
+	</div>
+
+	{% include '_footer.html' %}
+	{% include '_dialog.html' %}
+</body>
+{% include '_script.html' %}
+<script type="module" src="/static/js/system_config.js?t={{now}}"></script>
+
+</html>

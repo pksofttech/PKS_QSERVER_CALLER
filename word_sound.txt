@@ -1,0 +1,17 @@
+ขอเชิญหมายเลข
+Invitation number
+
+รับบริการที่ counter
+Receive service at the counter
+
+ขอบคุณ
+thank you
+
+ระบบการพิมพ์ผิดพลาดโปรดตรวจสอบการติดตั้งเครื่องพิมพ์ค่ะ
+The printing system has an error. Please check the printer installation.
+
+กรุณารับบัตร Q ขอบคุณค่ะ
+Please accept the Q card. Thank you.
+
+ระบบ QPKS สวัสดีค่ะ
+QPKS system. Hello.

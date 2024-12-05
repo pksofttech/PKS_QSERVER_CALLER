@@ -1,0 +1,82 @@
+<div class="z-50 drawer-side">
+    <label for="side-drawer" class="drawer-overlay"></label>
+    <ul id="ul_menu" class="w-64 min-h-screen gap-1 pb-10 overflow-auto font-semibold shadow-md menu bg-base-300 rounded-r-box">
+        <div class="hidden md:block">
+        </div>
+        <div class="inline-flex justify-between gap-1 p-4 border-2 rounded-xl border-success">
+            <div class="text-2xl text-center">
+                <i class="fa-solid fa-user-shield text-primary"></i>
+                {{user.name}}
+            </div>
+            <label class="btn btn-square btn-ghost">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </label>
+        </div>
+        <div id="AppClockDisplay" class="pb-4 text-5xl font-thin text-center text-primary" style="font-family: Wallpoet;"></div>
+        <div class="border rounded-btn border-success ">
+            <li>
+                <a class="" href="/home">
+                    <i class="w-10 fa-solid fa-house fa-2x"></i>
+                    Home(หน้าหลัก)
+                </a>
+            </li>
+            <li>
+                <a class="" href="/transection_report">
+                    <i class="w-10 fa-regular fa-rectangle-list fa-2x"></i>
+                    รายงานข้อมูล
+                </a>
+            </li>
+            <!-- <li>
+                <a class="" role="button" onclick="open_panel_caller_info()">
+                    <i class="w-10 fa-solid fa-square-parking fa-2x"></i>
+                    caller_kiosk
+                </a>
+            </li> -->
+
+            <!-- <li>
+                <a class="" role="button" onclick="open_panel_printer_info()">
+                    <i class="w-10 fa-solid fa-square-parking fa-2x"></i>
+                    printer_kiosk
+                </a>
+            </li> -->
+            <li>
+                <a class="" role="button" href="/caller_key">
+                    <i class="w-10 fa-solid fa-keyboard fa-2x"></i>
+                    caller_key
+                </a>
+            </li>
+            <li>
+                <a class="" role="button" href="/monitor_kiosk_info">
+                    <i class="w-10 fa-solid fa-tv fa-2x"></i>
+                    monitor_kiosk
+                </a>
+            </li>
+            <li>
+                <details>
+                    <summary>
+                        <i class="fa-solid fa-bars"></i>
+                        จัดการระบบ
+                        <span class="badge badge-secondary badge-outline">admin</span>
+                    </summary>
+                    <ul>
+                        <li><a href="/system_config">System Config</a></li>
+                        <li><button onclick="about_qpks.showModal()">About</button></li>
+                        <!-- <li>
+                            <details>
+                                <summary>Parent</summary>
+                                <ul>
+                                    <li><a>level 3 item 1</a></li>
+                                    <li><a>level 3 item 2</a></li>
+                                </ul>
+                            </details>
+                        </li> -->
+                    </ul>
+                </details>
+            </li>
+        </div>
+    </ul>
+</div>
+
+</div>

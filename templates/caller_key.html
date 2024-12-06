@@ -5,9 +5,9 @@
     {% include '_meta.html' %}
 </head>
 
-<body class="container mx-auto h-screen bg-scroll bg-center bg-no-repeat bg-auto " style="background-image: url('/static/image/logo.jpg')">
+<body class="container mx-auto h-screen  bg-green-700 ">
     <div class="w-full h-full p-4">
-        <div class="alert alert-info">
+        <div class="alert alert-info hidden">
             <p>Caller (เครื่องเรียกรับบริการ) <button onclick="setting_counter_service()" class="btn btn-xs btn-circle text-error"><i class="fa-solid fa-gear"></i></button></p>
             <i class="p-2 fa-solid fa-volume-high fa-2xl"> ช่องบริการ {{caller_id}}</i>
         </div>
@@ -16,29 +16,35 @@
             <div class="card-body">
                 <div class="flex flex-wrap justify-center gap-4">
                     <div class="w-full">
-                        <input class="input input-primary w-full text-7xl h-full text-center" value="กข1234" id="number_input_number">
+                        <input class="input input-succecc rounded-lg w-full text-7xl h-full text-center" value="" placeholder="1กค1234" id="number_input_number">
                     </div>
                     <div class="w-full">
-                        <button onclick="call_service_transaction()" class="w-full btn btn-warning btn-lg h-full rounded-3xl text-7xl p-8">เรียกรับบริการ</button>
+                        <button onclick="call_service_transaction()" class="w-full btn btn-success btn-lg h-full rounded-3xl text-7xl p-8 text-white">เรียกรับบริการ</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="w-full mt-2 bg-blue-500 bg-opacity-80 card">
+        <div class="w-full mt-2 bg-success bg-opacity-80 card">
             <div class="text-orange-900 card-body">
-                <div>
+                <!-- <div>
                     <div class="badge badge-accent badge-lg">เวลาออกรายการ </div>
                     <span class="text-lg font-extrabold" id="TRANSACTION_CREATE_DATE_LABEL">-</span>
                 </div>
                 <div id="TRANSACTION_SLIP_NUMBER_LABEL" class="p-2 font-black text-center border-4 rounded-lg text-7xl border-success text-warning">----</div>
                 <button id="TRANSACTION_CANCEL_BTN" onclick="TRANSACTION_OBJ.set_cancle()" type="button" disabled class=" btn btn-error btn-lg">ยกเลิกรายการ</button>
                 <button id="TRANSACTION_RECALL_BTN" onclick="TRANSACTION_OBJ.re_call()" type="button" disabled class=" btn btn-warning btn-lg">เรียกรับบริการอีกครั้ง</button>
-                <button id="TRANSACTION_SUCCESS_BTN" onclick="TRANSACTION_OBJ.success()" type="button" disabled class="text-lg btn btn-success btn-lg">รับบริการสำเร็จ</button>
+                <button id="TRANSACTION_SUCCESS_BTN" onclick="TRANSACTION_OBJ.success()" type="button" disabled class="text-lg btn btn-success btn-lg">รับบริการสำเร็จ</button> -->
                 <button type="button" class="text-lg btn btn-warning btn-outline" onclick="dialog_set_date_time_server.showModal()">ตั้งเวลา Server</button>
                 <button type="button" class="text-lg btn btn-error btn-outline" onclick="dialog_clear_transaction.showModal()">Clear Q All</button>
             </div>
         </div>
+        <div class="flex flex-row justify-center">
+            <div class="avatar p-8">
+                <img class="rounded-lg" src="/static/image/grab_logo.jpg" />
+            </div>
+        </div>
+
 
     </div>
     <footer class="fixed inset-x-0 bottom-0 items-center p-4 rounded-lg footer">

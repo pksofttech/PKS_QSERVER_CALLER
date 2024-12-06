@@ -49,3 +49,22 @@ async function call_service_transaction() {
     const number = document.getElementById("number_input_number").value;
     req_service_qpks(number);
 }
+
+window.set_date_time_server = set_date_time_server;
+async function set_date_time_server() {
+    const date_time = dialog_set_date_time_server.querySelector('[data-field="datetime"]');
+    if (date_time) {
+        const _dt = date_time.value;
+        if (_dt.length == 19) {
+            unity.debug(date_time.value);
+            const api_server = `http://${window.location.hostname}:8080/set_date?date=${_dt}`;
+            unity.debug(api_server);
+            const _reply = await unity.fetchApi(api_server, "get", null, "text");
+            if (!!_reply) {
+                unity.debug(_reply);
+            } else {
+                unity.toastr_notify({ icon: "error", msg: JSON.stringify(_reply) });
+            }
+        }
+    }
+}

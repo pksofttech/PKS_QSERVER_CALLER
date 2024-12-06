@@ -28,13 +28,14 @@
         <div class="w-full mt-2 bg-blue-500 bg-opacity-80 card">
             <div class="text-orange-900 card-body">
                 <div>
-                    <div class="badge badge-accent badge-lg">เวลาออกรายการ </div> <span class="text-lg font-extrabold" id="TRANSACTION_CREATE_DATE_LABEL">-</span>
+                    <div class="badge badge-accent badge-lg">เวลาออกรายการ </div>
+                    <span class="text-lg font-extrabold" id="TRANSACTION_CREATE_DATE_LABEL">-</span>
                 </div>
                 <div id="TRANSACTION_SLIP_NUMBER_LABEL" class="p-2 font-black text-center border-4 rounded-lg text-7xl border-success text-warning">----</div>
                 <button id="TRANSACTION_CANCEL_BTN" onclick="TRANSACTION_OBJ.set_cancle()" type="button" disabled class=" btn btn-error btn-lg">ยกเลิกรายการ</button>
                 <button id="TRANSACTION_RECALL_BTN" onclick="TRANSACTION_OBJ.re_call()" type="button" disabled class=" btn btn-warning btn-lg">เรียกรับบริการอีกครั้ง</button>
-
                 <button id="TRANSACTION_SUCCESS_BTN" onclick="TRANSACTION_OBJ.success()" type="button" disabled class="text-lg btn btn-success btn-lg">รับบริการสำเร็จ</button>
+                <button type="button" class="text-lg btn btn-warning btn-outline" onclick="dialog_set_date_time_server.showModal()">ตั้งเวลา Server</button>
             </div>
         </div>
 
@@ -53,6 +54,26 @@
 
     </footer>
     {% include '_dialog.html' %}
+
+
+    <dialog id="dialog_set_date_time_server" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="text-lg font-bold">Set DateTime Server!</h3>
+            <div class=" font-bold">date time "yyyy-mm-dd HH:MM:SS"</div>
+            <input type="text" placeholder="2020-12-12 08:00:00" data-field="datetime" value="2024-12-12 12:00:00" class="input input-bordered w-full max-w-xs" />
+            <div class="modal-action">
+                <button class="btn btn-warning" onclick="set_date_time_server();">ตั้งเวลา</button>
+                <form method="dialog">
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn">Close</button>
+                </form>
+            </div>
+
+        </div>
+    </dialog>
 </body>
 {% include '_script.html' %}
 <script type="module" src="/static/js/call_key.js?t={{now}}"></script>

@@ -479,34 +479,42 @@ async def path_get_service_call_slip_image(
 
 @router_transaction.post("/recall/")
 async def path_post_transaction_recall(
-    transaction_id: int,
+    transaction_id: int = 0,
     caller_device: str = "test",
+    number: str = "",
     # user_jwt=Depends(get_jwt_access),
     db: AsyncSession = Depends(get_async_session),
 ):
-    _sql = (
-        select(Transaction, Service)
-        .where(
-            Transaction.id == transaction_id,
+    if not number:
+        _sql = (
+            select(Transaction, Service)
+            .where(
+                Transaction.id == transaction_id,
+            )
+            .join(Service, (Transaction.service_id == Service.id))
         )
-        .join(Service, (Transaction.service_id == Service.id))
-    )
-    row = (await db.execute(_sql)).one_or_none()
-    if not row:
-        return {"success": False, "data": "Transaction not found"}
-    _transaction: Transaction = row[0]
-    _service: Service = row[1]
-    print(_transaction)
-    # TODO: This should Sound to call Module
+        row = (await db.execute(_sql)).one_or_none()
+        if not row:
+            return {"success": False, "data": "Transaction not found"}
+        _transaction: Transaction = row[0]
+        _service: Service = row[1]
+        print(_transaction)
+        transaction_call_data = {
+            "caller_device": caller_device,
+            "group": _service.group,
+            "number": _transaction.number,
+            "status": 301,
+        }
+    else:
+        transaction_call_data = {
+            "caller_device": caller_device,
+            "group": "",
+            "number": number,
+            "status": 301,
+        }
 
-    transaction_call_data = {
-        "caller_device": caller_device,
-        "group": _service.group,
-        "number": _transaction.number,
-        "status": 301,
-    }
-    json = {"monitor_kiosk": transaction_call_data}
-    await WebSockets.broadcast(json, "json")
+    # json = {"monitor_kiosk": transaction_call_data}
+    await WebSockets.broadcast({"monitor_kiosk": transaction_call_data}, "json")
     return {"success": True, "data": "Successfully call transaction"}
 
 

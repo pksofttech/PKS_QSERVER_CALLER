@@ -121,8 +121,22 @@ async function insert_feed_table_service(col01, col02) {
     _tbody.insertBefore(_c, _tbody.firstChild);
 }
 
+async function update_feed_table_service(col01, col02) {
+    // col01 = col01.substring(1);
+    // const _table = document.getElementById("table_service");
+    const _tbody = document.getElementById("tbody_service");
+
+    for (let index = 0; index < _tbody.rows.length; index++) {
+        const r = _tbody.rows[index].getElementsByTagName("td");
+        // unity.debug(r);
+        if (r[0].innerText == col01) {
+            r[1].innerHTML = `<div class="badge-call">${col02}</div>`;
+        }
+    }
+}
+
 async function push_QUEUE_WORLD(mode, msg1, msg2) {
-    document.getElementById("current_call").innerText = msg1.substring(1);
+    document.getElementById("current_call").innerText = msg1;
     document.getElementById("current_call_time").innerText = getTimeString();
     if (QUEUE_WORLD.includes(msg1)) {
         unity.debug(msg1 + " already in queue for playback");
@@ -138,7 +152,7 @@ async function push_QUEUE_WORLD(mode, msg1, msg2) {
     world_players.push("at_counter");
     world_players.push(msg2);
     world_players.push("end");
-    world_players.splice(1, 1);
+    // world_players.splice(1, 1);
     add_str_sound(world_players);
     if (!ON_Play) {
         QUEUE_WORLD.shift();
@@ -171,12 +185,13 @@ unity.wsService((e) => {
             insert_feed_table_service(col01, col02);
             // const msg = `<div class="p-4 text-3xl badge badge-info">${col01}</div> <div class="p-4 text-3xl badge badge-info">${col02}</div>`;
             // show_info(msg, "CAll-หมายเลข", "warning");
-            push_QUEUE_WORLD(202, col01, col02);
+            // push_QUEUE_WORLD(202, col01, col02);
             // update_info_service_counts();
         } else if (monitor_kiosk.status == 301) {
             // insert_feed_table_service(col01, col02);
 
             push_QUEUE_WORLD(301, col01, col02);
+            update_feed_table_service(col01, "Arriving Now");
             // toastr["warning"]("Recall-หมายเลข " + col01 + " ที่ช่องบริการ " + col02);
         } else if (monitor_kiosk.status == 300) {
             // pass

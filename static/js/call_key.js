@@ -44,10 +44,37 @@ async function req_service_qpks(number) {
     }
 }
 
-window.call_service_transaction = call_service_transaction;
-async function call_service_transaction() {
+async function call_service_qpks(number) {
+    // unity.debug(number);
+    if (!number) {
+        return;
+    }
+    unity.debug("call_service_trancaction of service " + number);
+    const _reply = await unity.fetchApi(
+        `/api/transaction/recall/?caller_device=${DEVICE_CALLER}&service_id=1&number=${number}`,
+        "post",
+        null,
+        "json"
+    );
+    if (!!_reply) {
+        if (_reply.success == true) {
+            // const transaction = _reply.data;
+            unity.debug(_reply);
+        } else {
+            unity.toastr_notify({ icon: "error", msg: JSON.stringify(_reply) });
+        }
+    }
+}
+window.add_service_transaction = add_service_transaction;
+async function add_service_transaction() {
     const number = document.getElementById("number_input_number").value;
     req_service_qpks(number);
+}
+
+window.call_service_transaction = call_service_transaction;
+async function call_service_transaction() {
+    const number = document.getElementById("number_input_number_call").value;
+    call_service_qpks(number);
 }
 
 window.set_date_time_server = set_date_time_server;

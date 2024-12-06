@@ -182,20 +182,8 @@ td {
     @apply px-2 py-2 rounded-btn bg-base-200;
 }
 
-.badge-info {
-    @apply text-xs font-medium  px-2.5 py-0.5 w-fit rounded text-white bg-info;
-}
-
-.badge-success {
-    @apply text-xs font-medium  px-2.5 py-0.5 w-fit rounded text-white bg-success;
-}
-
-.badge-warning {
-    @apply text-xs font-medium  px-2.5 py-0.5 w-fit rounded text-white bg-warning;
-}
-
-.badge-error {
-    @apply text-xs font-medium  px-2.5 py-0.5 w-fit rounded text-white bg-error;
+.badge-call {
+    @apply badge badge-warning badge-lg text-2xl badge-outline animate-bounce py-4 font-bold;
 }
 
 .modal-dialog {

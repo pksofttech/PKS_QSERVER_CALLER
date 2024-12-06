@@ -834,6 +834,47 @@ async def path_post_transaction_chart(
     return {"success": True, "data": row}
 
 
+@router_transaction.post("/clear_transaction/")
+async def path_clear_transaction(
+    req_para: Request,
+    # user_jwt=Depends(get_jwt_access),
+    # user=Depends(access_cookie_token),
+    db: AsyncSession = Depends(get_async_session),
+):
+    print("\n\n" + "*" * 20 + "clear_transaction" + "*" * 20)
+    success = False
+    mag = ""
+    try:
+        sql = select(Transaction)
+        rows = (await db.execute(sql)).all()
+        for row in rows:
+            _transaction: Transaction = row[0]
+            print_warning(_transaction)
+            transaction_record = Transaction_Record(
+                machine=_transaction.machine,
+                number=_transaction.number,
+                createDate=_transaction.createDate,
+                caller_device=_transaction.caller_device,
+                callerDate=_transaction.callerDate,
+                successDate=_transaction.successDate,
+                review=_transaction.review,
+                tag=_transaction.tag,
+                status=_transaction.status,
+                service_id=_transaction.service_id,
+            )
+
+            db.add(transaction_record)
+            result = await db.delete(_transaction)
+            print_success(result)
+            await db.commit()
+        success = True
+        json = {"monitor_kiosk": {"reload": True}}
+        await WebSockets.broadcast(json, "json")
+    except Exception as err:
+        mag = f"{err}"
+    return {"success": success, "mag": mag}
+
+
 # **!SECTION **************************************************************************
 
 

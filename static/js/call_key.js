@@ -68,3 +68,18 @@ async function set_date_time_server() {
         }
     }
 }
+
+window.clear_transaction = clear_transaction;
+async function clear_transaction() {
+    const _reply = await unity.fetchApi("/api/transaction/clear_transaction/", "post", null, "json");
+    if (!!_reply) {
+        if (_reply.success == true) {
+            const msg = _reply.msg;
+            // unity.debug(msg);
+            dialog_clear_transaction.close();
+        } else {
+            unity.toastr_notify({ icon: "error", msg: JSON.stringify(_reply) });
+        }
+    }
+}
+// /api/transaction

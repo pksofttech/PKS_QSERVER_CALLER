@@ -5,30 +5,29 @@
     {% include '_meta.html' %}
 </head>
 
-<body class="flex flex-col bg-green-500 min-h-screen p-8">
+<body class="flex flex-col bg-green-700 min-h-screen p-8">
     <div class="grid grid-cols-2 gap-4 ">
         <!-- Left Panel -->
         <div class="flex flex-col gap-2 rounded-md relative h-screen">
             <div class="bg-green-600 text-white text-6xl p-4 text-center rounded-md font-bold" id="clock_display">-</div>
-            <div class="">
+            <div class="p-8">
+                <img class="h-44 rounded-full mx-auto ring-2 ring-white" src="/static/image/grab_logo.jpg" />
+            </div>
+            <div class="w-full">
                 <div class="flex flex-col justify-center">
+
+                    <div class="w-fit mx-auto animate-bounce font-bold rounded-md bg-white p-8 ring-4" id="current_call" style="font-size: 128px;">
+                        Waiting
+                    </div>
                     <div class="bg-green-600 text-white text-4xl p-4 text-center rounded-md font-bold mb-10 w-fit mx-auto">
                         Arriving Now
                     </div>
-                    <div class="w-fit mx-auto animate-bounce font-bold rounded-md bg-white p-8 ring-4 text-7xl" id="current_call" style="letter-spacing: 8px;">
-                        Waiting
-                    </div>
-                    <div class="inline-flex p-8">
+                    <div class=" p-8 hidden">
                         <div class=" inline-flex gap-4 items-baseline">
                             <div class="badge badge-neutral badge-lg">Time Call</div>
                             <p id="current_call_time">-</p>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="absolute bottom-20 left-0 w-full">
-                <div class="">
-                    <img class="h-44 rounded-full mx-auto ring-2 ring-white" src="/static/image/grab_logo.jpg" />
                 </div>
             </div>
         </div>

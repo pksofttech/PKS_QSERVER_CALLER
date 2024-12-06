@@ -6,6 +6,7 @@ unity.debug("********************************************");
 
 unity.toastr_notify({ icon: "info", msg: "ยินดีต้อนรับระบบ Q PSK ขอบคุณที่ใช้บริการค่ะ" });
 
+const key_call = "Arriving Now";
 const qpks_start = new Howl({
     src: [`${SOUNDS_PATH}qpks_start.mp3`],
 });
@@ -121,18 +122,31 @@ async function insert_feed_table_service(col01, col02) {
     _tbody.insertBefore(_c, _tbody.firstChild);
 }
 
-async function update_feed_table_service(col01, col02) {
+async function update_feed_table_service(col01) {
     // col01 = col01.substring(1);
     // const _table = document.getElementById("table_service");
     const _tbody = document.getElementById("tbody_service");
-
+    const remove_list = [];
     for (let index = 0; index < _tbody.rows.length; index++) {
         const r = _tbody.rows[index].getElementsByTagName("td");
         // unity.debug(r);
+
         if (r[0].innerText == col01) {
-            r[1].innerHTML = `<div class="badge-call">${col02}</div>`;
+            r[1].innerHTML = `<div class="badge-call">${key_call}</div>`;
+        } else {
+            if (r[1].innerText == key_call) {
+                remove_list.push(index);
+            }
         }
     }
+
+    remove_list.sort((a, b) => b - a);
+
+    remove_list.forEach((index) => {
+        if (index >= 0 && index < _tbody.rows.length) {
+            _tbody.deleteRow(index);
+        }
+    });
 }
 
 async function push_QUEUE_WORLD(mode, msg1, msg2) {
@@ -191,7 +205,7 @@ unity.wsService((e) => {
             // insert_feed_table_service(col01, col02);
 
             push_QUEUE_WORLD(301, col01, col02);
-            update_feed_table_service(col01, "Arriving Now");
+            update_feed_table_service(col01);
             // toastr["warning"]("Recall-หมายเลข " + col01 + " ที่ช่องบริการ " + col02);
         } else if (monitor_kiosk.status == 300) {
             // pass

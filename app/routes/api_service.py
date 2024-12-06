@@ -506,6 +506,35 @@ async def path_post_transaction_recall(
             "status": 301,
         }
     else:
+        _sql = (
+            select(Transaction).where(
+                Transaction.number == number,
+            )
+            # .join(Service, (Transaction.service_id == Service.id))
+        )
+        rows = (await db.execute(_sql)).all()
+        for row in rows:
+            _transaction = row[0]
+            print_success(_transaction)
+
+            transaction_record = Transaction_Record(
+                machine=_transaction.machine,
+                number=_transaction.number,
+                createDate=_transaction.createDate,
+                caller_device=_transaction.caller_device,
+                callerDate=_transaction.callerDate,
+                successDate=time_now(),
+                review=_transaction.review,
+                tag=_transaction.tag,
+                status=_transaction.status,
+                service_id=_transaction.service_id,
+            )
+
+            db.add(transaction_record)
+            await db.commit()
+            await db.delete(_transaction)
+            await db.commit()
+
         transaction_call_data = {
             "caller_device": caller_device,
             "group": "",

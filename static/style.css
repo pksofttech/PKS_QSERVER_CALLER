@@ -5450,6 +5450,10 @@ html:has(.drawer-toggle:checked) {
   margin-bottom: 0.25rem;
 }
 
+.mb-10 {
+  margin-bottom: 2.5rem;
+}
+
 .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -5510,10 +5514,6 @@ html:has(.drawer-toggle:checked) {
   margin-top: 1.25rem;
 }
 
-.mb-10 {
-  margin-bottom: 2.5rem;
-}
-
 .block {
   display: block;
 }
@@ -5570,6 +5570,10 @@ html:has(.drawer-toggle:checked) {
   height: 6rem;
 }
 
+.h-44 {
+  height: 11rem;
+}
+
 .h-48 {
   height: 12rem;
 }
@@ -5582,14 +5586,6 @@ html:has(.drawer-toggle:checked) {
   height: 1.5rem;
 }
 
-.h-60 {
-  height: 15rem;
-}
-
-.h-72 {
-  height: 18rem;
-}
-
 .h-8 {
   height: 2rem;
 }
@@ -5600,10 +5596,6 @@ html:has(.drawer-toggle:checked) {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-44 {
-  height: 11rem;
 }
 
 .max-h-screen {
@@ -5833,10 +5825,6 @@ html:has(.drawer-toggle:checked) {
 
 .justify-start {
   justify-content: flex-start;
-}
-
-.justify-end {
-  justify-content: flex-end;
 }
 
 .justify-center {

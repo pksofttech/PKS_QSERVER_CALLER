@@ -137,17 +137,36 @@ async def path_post_transaction(
             0
         ] + 1
         number = str(last_number).zfill(3)
-
-    sql = select(Transaction).limit(1).order_by(Transaction.id.desc())
-    row = (await db.execute(sql)).one_or_none()
-    print_success(row)
-    if row:
-        last_transaction: Transaction = row[0]
-        if last_transaction.number == number:
+        sql = select(Transaction).limit(1).order_by(Transaction.id.desc())
+        row = (await db.execute(sql)).one_or_none()
+        if row:
+            last_transaction: Transaction = row[0]
+            if last_transaction.number == number:
+                return {
+                    "success": True,
+                    "data": (last_transaction, last_transaction.service),
+                }
+    else:
+        sql = (
+            select(Transaction, Service)
+            .where(
+                Transaction.number == number,
+                Transaction.status == CREATED,
+                Service.id == service_id,
+            )
+            .join(
+                Service,
+                Transaction.service_id == Service.id,
+            )
+        )
+        row = (await db.execute(sql)).one_or_none()
+        if row:
+            _Transaction: Transaction = row[0]
             return {
-                "success": True,
-                "data": (last_transaction, last_transaction.service),
+                "success": False,
+                "msg": f"รายการมีการทำรายการแล้ว : {_Transaction.createDate}",
             }
+
     _transaction = Transaction(
         machine=machine,
         service_id=service_id,
@@ -245,27 +264,46 @@ async def path_get_service_status(
 
 @router_service.post("/service_call/")
 async def path_post_service_call(
-    service_id: int,
-    caller_device: str,
+    service_id: int = 0,
+    caller_device: str = "",
+    number: str = "",
     # user_jwt=Depends(get_jwt_access),
     db: AsyncSession = Depends(get_async_session),
 ):
     _now = time_now()
-    _sql = select(Service).where(Service.id == service_id)
-    row = (await db.execute(_sql)).one_or_none()
-    if not row:
-        return {"success": False, "data": "Service not found"}
-    _service: Service = row[0]
-    _sql = (
-        select(Transaction)
-        .where(
-            Transaction.service_id == _service.id,
-            Transaction.callerDate == None,
+    row = None
+    if not number:
+        _sql = select(Service).where(Service.id == service_id)
+        row = (await db.execute(_sql)).one_or_none()
+        if not row:
+            return {"success": False, "data": "Service not found"}
+        _service: Service = row[0]
+        _sql = (
+            select(Transaction)
+            .where(
+                Transaction.service_id == _service.id,
+                Transaction.status == CREATED,
+            )
+            .order_by(Transaction.id)
         )
-        .order_by(Transaction.id)
-    )
-    row = (await db.execute(_sql)).first()
-    print(row)
+        row = (await db.execute(_sql)).first()
+    else:
+        _sql = select(Service).where(Service.id == service_id)
+        row = (await db.execute(_sql)).one_or_none()
+        if not row:
+            return {"success": False, "data": "Service not found"}
+        _service: Service = row[0]
+        _sql = (
+            select(Transaction)
+            .where(
+                Transaction.service_id == _service.id,
+                Transaction.number == number,
+                Transaction.status == CREATED,
+            )
+            .order_by(Transaction.id)
+        )
+        row = (await db.execute(_sql)).first()
+    # print(row)
     transaction_call = None
     if row:
         transaction_call: Transaction = row[0]
@@ -274,6 +312,7 @@ async def path_post_service_call(
         transaction_call.status = PROCESS
         await db.commit()
         await db.refresh(transaction_call)
+        print_success(transaction_call)
 
         _sql = (
             select(
@@ -312,20 +351,21 @@ async def path_post_service_call(
         await WebSockets.broadcast(json, "json")
 
     else:
-        sql = select(Transaction).limit(1).order_by(Transaction.id.desc())
-        row = (await db.execute(sql)).one_or_none()
-        print_success(row)
-        if row:
-            transaction_call: Transaction = row[0]
-            transaction_call_data = {
-                "caller_device": caller_device,
-                "group": _service.group,
-                "number": transaction_call.number,
-                "status": transaction_call.status,
-                # "service_info": service_info,
-            }
-            json = {"monitor_kiosk": transaction_call_data}
-            await WebSockets.broadcast(json, "json")
+        pass
+        # sql = select(Transaction).limit(1).order_by(Transaction.id.desc())
+        # row = (await db.execute(sql)).one_or_none()
+        # print_success(row)
+        # if row:
+        # transaction_call: Transaction = row[0]
+        transaction_call_data = {
+            "caller_device": caller_device,
+            "group": "",
+            "number": number,
+            "status": 401,
+            # "service_info": service_info,
+        }
+        json = {"monitor_kiosk": transaction_call_data}
+        await WebSockets.broadcast(json, "json")
 
     return {"success": True, "data": transaction_call}
 
@@ -549,29 +589,42 @@ async def path_post_transaction_recall(
 
 @router_transaction.post("/update/")
 async def path_post_transaction_update(
-    transaction_id: int,
     status_code: int,
+    transaction_id: int = 0,
     caller_device: str = "test",
+    number: str = "",
     # user_jwt=Depends(get_jwt_access),
     db: AsyncSession = Depends(get_async_session),
 ):
-    _sql = (
-        select(Transaction, Service)
-        .where(
-            Transaction.id == transaction_id,
+    if not number:
+        _sql = (
+            select(Transaction, Service)
+            .where(
+                Transaction.id == transaction_id,
+            )
+            .join(Service, (Transaction.service_id == Service.id))
         )
-        .join(Service, (Transaction.service_id == Service.id))
-    )
-    row = (await db.execute(_sql)).one_or_none()
-    if not row:
+        rows = (await db.execute(_sql)).one_or_none()
+    else:
+        _sql = (
+            select(Transaction, Service)
+            .where(
+                Transaction.number == number,
+                Transaction.status == PROCESS,
+            )
+            .join(Service, (Transaction.service_id == Service.id))
+        )
+        rows = (await db.execute(_sql)).all()
+    if not rows:
         return {"success": False, "data": "Transaction not found"}
-    _transaction: Transaction = row[0]
-    _service: Service = row[1]
+    for row in rows:
+        _transaction: Transaction = row[0]
+        _service: Service = row[1]
 
-    _transaction.status = status_code
+        _transaction.status = status_code
 
-    await db.commit()
-    await db.refresh(_transaction)
+        await db.commit()
+        await db.refresh(_transaction)
 
     transaction_call_data = {
         "caller_device": caller_device,

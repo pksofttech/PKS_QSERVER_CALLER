@@ -45,7 +45,7 @@ from sqlalchemy import select, delete
 
 from app.core import models
 from app.routes.websocket import WebSockets
-from app.stdio import CREATED, time_now, print_error
+from app.stdio import CREATED, PROCESS, time_now, print_error
 
 
 DIR_PATH = config.DIR_PATH
@@ -330,18 +330,33 @@ async def router_monitor_kiosk_info(
     _now = time_now()
     _sql = (
         select(Transaction, Service)
-        .where(Transaction.status != CREATED)
+        .where(Transaction.status == CREATED)
         .join(Service, (Service.id == Transaction.service_id))
         .limit(LIMIT)
-        .order_by(desc(Transaction.callerDate))
+        .order_by(desc(Transaction.id))
     )
     rows = (await db.execute(_sql)).all()
     monitor_services = []
     for row in rows:
         _Transaction: Transaction = row[0]
-        time_call = _Transaction.callerDate.strftime("%H:%m:%S")
+        time_call = _Transaction.createDate.strftime("%H:%M:%S")
         monitor_services.append((_Transaction.number, time_call))
     print(monitor_services)
+
+    _sql = (
+        select(Transaction, Service)
+        .where(Transaction.status == PROCESS)
+        .join(Service, (Service.id == Transaction.service_id))
+        .limit(LIMIT)
+        .order_by(desc(Transaction.id))
+    )
+    rows = (await db.execute(_sql)).all()
+    monitor_services_process = []
+    for row in rows:
+        _Transaction: Transaction = row[0]
+        time_call = _Transaction.callerDate.strftime("%H:%M:%S")
+        monitor_services_process.append((_Transaction.number, time_call))
+    print(monitor_services_process)
 
     _sql = (
         select(
@@ -386,6 +401,7 @@ async def router_monitor_kiosk_info(
             "datas": datas,
             "now": _now,
             "monitor_services": monitor_services,
+            "monitor_services_process": monitor_services_process,
             "system_services": True if system_config else False,
             "monitor_info": monitor_info,
             "video_path": video_path,

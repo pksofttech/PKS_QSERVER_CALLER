@@ -25,23 +25,6 @@ async function req_service_qpks(number) {
             unity.toastr_notify({ icon: "error", msg: JSON.stringify(_reply) });
         }
     }
-    if (success) {
-        unity.debug("call_service_trancaction of service " + 1);
-        const _reply = await unity.fetchApi(
-            `/api/service/service_call/?caller_device=${DEVICE_CALLER}&service_id=1`,
-            "post",
-            null,
-            "json"
-        );
-        if (!!_reply) {
-            if (_reply.success == true) {
-                const transaction = _reply.data;
-                unity.debug(_reply);
-            } else {
-                unity.toastr_notify({ icon: "error", msg: JSON.stringify(_reply) });
-            }
-        }
-    }
 }
 
 async function call_service_qpks(number) {
@@ -49,9 +32,9 @@ async function call_service_qpks(number) {
     if (!number) {
         return;
     }
-    unity.debug("call_service_trancaction of service " + number);
+    unity.debug("call_service_trancaction of service " + 1);
     const _reply = await unity.fetchApi(
-        `/api/transaction/recall/?caller_device=${DEVICE_CALLER}&service_id=1&number=${number}`,
+        `/api/service/service_call/?caller_device=${DEVICE_CALLER}&service_id=1&number=${number}`,
         "post",
         null,
         "json"
@@ -65,6 +48,31 @@ async function call_service_qpks(number) {
         }
     }
 }
+
+window.update_transaction_success = update_transaction_success;
+async function update_transaction_success() {
+    // unity.debug(number);
+    const number = document.getElementById("number_input_number_call").value;
+    if (!number) {
+        return;
+    }
+    const status_code = 300;
+    const _reply = await unity.fetchApi(
+        `/api/transaction/update/?status_code=${status_code}&number=${number}&caller_device=${DEVICE_CALLER}`,
+        "post",
+        null,
+        "json"
+    );
+    if (!!_reply) {
+        if (_reply.success == true) {
+            // const transaction = _reply.data;
+            unity.debug(_reply);
+        } else {
+            unity.toastr_notify({ icon: "error", msg: "รายการทะเบียนนี้ไม่มีในระบบ" });
+        }
+    }
+}
+
 window.add_service_transaction = add_service_transaction;
 async function add_service_transaction() {
     const number = document.getElementById("number_input_number").value;

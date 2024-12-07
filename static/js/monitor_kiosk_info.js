@@ -100,7 +100,6 @@ function getTimeString() {
 
 const TABLE_ROW = 15;
 async function insert_feed_table_service(col01, col02) {
-    col01 = col01.substring(1);
     const _table = document.getElementById("table_service");
     const _tbody = document.getElementById("tbody_service");
 
@@ -117,31 +116,70 @@ async function insert_feed_table_service(col01, col02) {
     }
     const _c = temp.content.cloneNode(true);
     _c.querySelectorAll('[name="col01"]')[0].innerText = col01;
-    _c.querySelectorAll('[name="col02"]')[0].innerText = getTimeString();
+    _c.querySelectorAll('[name="col02"]')[0].innerText = "in the parking lot";
+
+    _tbody.insertBefore(_c, _tbody.firstChild);
+}
+
+async function insert_feed_table_service_process(col01) {
+    const _table = document.getElementById("table_service_process");
+    const _tbody = document.getElementById("tbody_service_process");
+
+    if (_tbody.rows.length > 0) {
+        const r = _tbody.rows[0].getElementsByTagName("td");
+        if (r[0].innerText == col01) {
+            return;
+        }
+    }
+
+    const temp = document.getElementById("template_content_service_process");
+    if (_table.rows.length > TABLE_ROW) {
+        _table.deleteRow(-1);
+    }
+    const _c = temp.content.cloneNode(true);
+    _c.querySelectorAll('[name="col01"]')[0].innerText = col01;
+    _c.querySelectorAll('[name="col02"]')[0].innerText = "has arrived";
 
     _tbody.insertBefore(_c, _tbody.firstChild);
 }
 
 async function update_feed_table_service(col01) {
-    // col01 = col01.substring(1);
-    // const _table = document.getElementById("table_service");
     const _tbody = document.getElementById("tbody_service");
     const remove_list = [];
     for (let index = 0; index < _tbody.rows.length; index++) {
         const r = _tbody.rows[index].getElementsByTagName("td");
         // unity.debug(r);
-
         if (r[0].innerText == col01) {
-            r[1].innerHTML = `<div class="badge-call">${key_call}</div>`;
-        } else {
-            if (r[1].innerText == key_call) {
-                remove_list.push(index);
-            }
+            remove_list.push(index);
+            // r[1].innerHTML = `<div class="badge-call">${key_call}</div>`;
         }
     }
 
+    if (remove_list.length > 0) {
+        insert_feed_table_service_process(col01);
+    }
     remove_list.sort((a, b) => b - a);
+    remove_list.forEach((index) => {
+        if (index >= 0 && index < _tbody.rows.length) {
+            _tbody.deleteRow(index);
+        }
+    });
+}
 
+async function update_feed_table_success(col01) {
+    // const _table = document.getElementById("table_service_process");
+    const _tbody = document.getElementById("tbody_service_process");
+
+    const remove_list = [];
+    for (let index = 0; index < _tbody.rows.length; index++) {
+        const r = _tbody.rows[index].getElementsByTagName("td");
+        // unity.debug(r);
+        if (r[0].innerText == col01) {
+            remove_list.push(index);
+            // r[1].innerHTML = `<div class="badge-call">${key_call}</div>`;
+        }
+    }
+    remove_list.sort((a, b) => b - a);
     remove_list.forEach((index) => {
         if (index >= 0 && index < _tbody.rows.length) {
             _tbody.deleteRow(index);
@@ -151,7 +189,6 @@ async function update_feed_table_service(col01) {
 
 async function push_QUEUE_WORLD(mode, msg1, msg2) {
     document.getElementById("current_call").innerText = msg1;
-    document.getElementById("current_call_time").innerText = getTimeString();
     if (QUEUE_WORLD.includes(msg1)) {
         unity.debug(msg1 + " already in queue for playback");
         return;
@@ -183,6 +220,7 @@ QPKS_SOUNDS["infobleep"].play();
 
 unity.wsService((e) => {
     const monitor_kiosk = e.monitor_kiosk;
+    const caller_kiosk = e.caller_kiosk;
     if (monitor_kiosk) {
         if (monitor_kiosk.reload) {
             toastr["warning"](`Q PSK RELOAD`);
@@ -191,24 +229,31 @@ unity.wsService((e) => {
             }, 1000);
             return;
         }
-
-        const col01 = `${monitor_kiosk.group}${monitor_kiosk.number}`;
+        const col01 = `${monitor_kiosk.number}`;
         const col02 = `${monitor_kiosk.caller_device}`;
 
         if (monitor_kiosk.status == 202) {
-            insert_feed_table_service(col01, col02);
+            // insert_feed_table_service(col01, col02);
             // const msg = `<div class="p-4 text-3xl badge badge-info">${col01}</div> <div class="p-4 text-3xl badge badge-info">${col02}</div>`;
             // show_info(msg, "CAll-หมายเลข", "warning");
-            // push_QUEUE_WORLD(202, col01, col02);
+            push_QUEUE_WORLD(202, col01, col02);
+            update_feed_table_service(col01);
             // update_info_service_counts();
         } else if (monitor_kiosk.status == 301) {
-            // insert_feed_table_service(col01, col02);
-
             push_QUEUE_WORLD(301, col01, col02);
             update_feed_table_service(col01);
-            // toastr["warning"]("Recall-หมายเลข " + col01 + " ที่ช่องบริการ " + col02);
         } else if (monitor_kiosk.status == 300) {
-            // pass
+            update_feed_table_success(col01);
+        } else if (monitor_kiosk.status == 401) {
+            push_QUEUE_WORLD(301, col01, col02);
+        }
+    }
+
+    if (caller_kiosk) {
+        unity.debug(caller_kiosk);
+        if (caller_kiosk.cmd == "update") {
+            caller_kiosk.number = caller_kiosk.number.slice(1);
+            insert_feed_table_service(caller_kiosk.number, "new");
         }
     }
 });

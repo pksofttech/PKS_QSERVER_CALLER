@@ -5407,14 +5407,6 @@ html:has(.drawer-toggle:checked) {
   top: 0.5rem;
 }
 
-.bottom-10 {
-  bottom: 2.5rem;
-}
-
-.left-1\/2 {
-  left: 50%;
-}
-
 .z-10 {
   z-index: 10;
 }
@@ -5566,8 +5558,8 @@ html:has(.drawer-toggle:checked) {
   height: 6rem;
 }
 
-.h-44 {
-  height: 11rem;
+.h-36 {
+  height: 9rem;
 }
 
 .h-48 {
@@ -5582,8 +5574,16 @@ html:has(.drawer-toggle:checked) {
   height: 1.5rem;
 }
 
+.h-60 {
+  height: 15rem;
+}
+
 .h-8 {
   height: 2rem;
+}
+
+.h-80 {
+  height: 20rem;
 }
 
 .h-full {
@@ -5592,26 +5592,6 @@ html:has(.drawer-toggle:checked) {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-36 {
-  height: 9rem;
-}
-
-.h-28 {
-  height: 7rem;
-}
-
-.h-96 {
-  height: 24rem;
-}
-
-.h-60 {
-  height: 15rem;
-}
-
-.h-80 {
-  height: 20rem;
 }
 
 .max-h-screen {
@@ -5699,6 +5679,18 @@ html:has(.drawer-toggle:checked) {
   width: 100%;
 }
 
+.w-36 {
+  width: 9rem;
+}
+
+.w-56 {
+  width: 14rem;
+}
+
+.w-72 {
+  width: 18rem;
+}
+
 .min-w-0 {
   min-width: 0px;
 }
@@ -5709,10 +5701,6 @@ html:has(.drawer-toggle:checked) {
 
 .min-w-80 {
   min-width: 20rem;
-}
-
-.min-w-96 {
-  min-width: 24rem;
 }
 
 .max-w-2xl {
@@ -6156,10 +6144,6 @@ html:has(.drawer-toggle:checked) {
   background-repeat: no-repeat;
 }
 
-.fill-current {
-  fill: currentColor;
-}
-
 .stroke-current {
   stroke: currentColor;
 }
@@ -6300,11 +6284,6 @@ html:has(.drawer-toggle:checked) {
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
-}
-
-.text-4xl {
-  font-size: 2.25rem;
-  line-height: 2.5rem;
 }
 
 .text-5xl {
@@ -7835,14 +7814,6 @@ table.dataTable.display tbody {
     --tw-space-y-reverse: 0;
     margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
     margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
-  }
-
-  .md\:place-self-center {
-    place-self: center;
-  }
-
-  .md\:justify-self-end {
-    justify-self: end;
   }
 
   .md\:p-8 {

@@ -35,7 +35,7 @@
     <div class="grid grid-cols-2 ">
         <!-- Left Panel -->
         <div class="flex flex-col gap-2 rounded-md h-full">
-            <div class="bg-green-600 text-white text-6xl p-4 text-center  font-bold hidden" id="clock_display">-</div>
+            <!-- <div class="bg-green-600 text-white text-6xl p-4 text-center  font-bold hidden" >-</div> -->
             <div class="bg-green-600 text-white text-6xl p-2 text-center  font-bold h-20">Come in</div>
             <div class="flex flex-col justify-center h-60 border-b-2">
                 <div class=" mx-auto font-bold rounded-md bg-white p-2 ring-4 w-96 text-center h-36 items-center" style="font-size: 72px;">
@@ -112,8 +112,9 @@
     <div class="fixed  bottom-0 items-center text-center w-full">
         <img class="h-24 rounded-full mx-auto ring-2 ring-white mb-1" src="/static/image/grab_logo.jpg" />
     </div>
-    <footer class="fixed inset-x-0 bottom-0 items-center rounded-lg footer">
-        <p class="pl-2 text-xs">Copyright © PKSOFTTECH.ORG 2021 - All right reserved</p>
+    <footer class="fixed inset-x-0 bottom-0 inline-flex justify-around">
+        <p class="px-2 text-xs text-left w-full">Copyright © PKSOFTTECH.ORG 2021 - All right reserved</p>
+        <p class="px-2 text-xs text-right w-full " id="clock_display">date time</p>
     </footer>
 
 </body>

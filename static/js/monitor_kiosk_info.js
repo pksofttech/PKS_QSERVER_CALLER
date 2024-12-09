@@ -211,6 +211,8 @@ async function push_QUEUE_WORLD(mode, msg1, msg2) {
         QPKS_SOUNDS["infobleep"].play();
         // call_active_table_service(msg1);
     }
+    const info_msg = `<div class="text-7xl animate-bounce">${msg1}</div>`;
+    unity.toastr_notify({ icon: "info", msg: info_msg });
 }
 
 // add_str_sound(["call_number", "A", "0", "0", "1", "at_counter", "1", "end"]);
@@ -264,7 +266,8 @@ function updateClock() {
     const hours = String(now.getHours()).padStart(2, "0");
     const minutes = String(now.getMinutes()).padStart(2, "0");
     const seconds = String(now.getSeconds()).padStart(2, "0");
-    clockElement.textContent = `${hours}:${minutes}:${seconds}`;
+    // clockElement.textContent = `${hours}:${minutes}:${seconds}`;
+    clockElement.textContent = `${now}`;
 }
 
 // Update the clock every second

@@ -5610,6 +5610,10 @@ html:has(.drawer-toggle:checked) {
   min-height: 100vh;
 }
 
+.min-h-svh {
+  min-height: 100svh;
+}
+
 .w-10 {
   width: 2.5rem;
 }

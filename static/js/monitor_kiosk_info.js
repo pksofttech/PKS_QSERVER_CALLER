@@ -200,9 +200,9 @@ async function push_QUEUE_WORLD(mode, msg1, msg2) {
     let world_players = [];
     world_players.push("call_number");
     world_players = world_players.concat(numbers);
-    world_players.push("at_counter");
+    // world_players.push("at_counter");
     world_players.push(msg2);
-    world_players.push("end");
+    // world_players.push("end");
     // world_players.splice(1, 1);
     add_str_sound(world_players);
     if (!ON_Play) {

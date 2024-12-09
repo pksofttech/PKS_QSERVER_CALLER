@@ -31,20 +31,20 @@
     </style>
 </head>
 
-<body class="flex flex-col bg-green-700 min-h-screen p-4">
-    <div class="grid grid-cols-2 gap-4 ">
+<body class="flex flex-col bg-green-700 min-h-screen">
+    <div class="grid grid-cols-2 ">
         <!-- Left Panel -->
-        <div class="flex flex-col gap-2 rounded-md h-screen">
-            <div class="bg-green-600 text-white text-6xl p-4 text-center rounded-md font-bold hidden" id="clock_display">-</div>
-            <div class="bg-green-600 text-white text-6xl p-2 text-center rounded-md font-bold h-20">Come in</div>
-            <div class="flex flex-col justify-center h-60">
+        <div class="flex flex-col gap-2 rounded-md h-full">
+            <div class="bg-green-600 text-white text-6xl p-4 text-center  font-bold hidden" id="clock_display">-</div>
+            <div class="bg-green-600 text-white text-6xl p-2 text-center  font-bold h-20">Come in</div>
+            <div class="flex flex-col justify-center h-60 border-b-2">
                 <div class=" mx-auto font-bold rounded-md bg-white p-2 ring-4 w-96 text-center h-36 items-center" style="font-size: 72px;">
                     <div class="text-ellipsis overflow-clip blinking-text" id="current_call">Come in</div>
                 </div>
             </div>
 
-            <div class="w-full h-80 border rounded-md">
-                <div class=" text-white text-2xl p-1 rounded-md font-bold ">Ready to serve</div>
+            <div class="w-full h-80 px-8">
+                <div class=" text-white text-2xl p-1  font-bold ">Ready to serve</div>
                 <div class="px-8 overflow-scroll" style="height: 90%;">
                     <table id="table_service_process" class=" w-full">
                         <tbody id="tbody_service_process" class=" font-extrabold text-center text-2xl text-white">
@@ -76,16 +76,16 @@
 
         </div>
         <!-- Right Panel -->
-        <div class="h-screen">
-            <div class="bg-green-600 text-white text-6xl p-2 text-center rounded-md font-bold h-20">Stand by</div>
+        <div class="h-full border-l-2 ">
+            <div class="bg-green-600 text-white text-6xl p-2 text-center font-bold h-20">Stand by</div>
 
-            <div class="p-4 overflow-scroll" style="height: 90%;">
+            <div class="p-8 overflow-scroll" style="height: 90%;">
                 <!-- <table id="table_service" class="table text-xl table-zebra bg-green-400"> -->
-                <table id="table_service" class=" w-full p-2 rounded-btn">
+                <table id="table_service" class=" w-full p-2 ">
                     <tbody id="tbody_service" class=" font-extrabold text-center text-3xl text-white">
                         {% for on_call in monitor_services %}
                         <tr class="">
-                            <td class="text-left">
+                            <td class="text-left w-60">
                                 {{on_call[0]}}
                             </td>
                             <td class="text-left">
@@ -96,7 +96,7 @@
                     </tbody>
                     <template id="template_content_service">
                         <tr class="">
-                            <td name="col01" class="text-left">
+                            <td name="col01" class="text-left w-60">
                                 001
                             </td>
                             <td name="col02" class="text-left">
